@@ -19,11 +19,14 @@ namespace RallySimulator.Domain.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="Race"/> class.
         /// </summary>
+        /// <param name="year">The year.</param>
         /// <param name="lengthInKilometers">The length in kilometers.</param>
-        public Race(LengthInKilometers lengthInKilometers)
+        public Race(int year, LengthInKilometers lengthInKilometers)
         {
             Ensure.NotNull(lengthInKilometers, "The race length in kilometers is required.", nameof(lengthInKilometers));
+            Ensure.GreaterThanZero(year, "The year must be greater than zero.", nameof(year));
 
+            Year = year;
             LengthInKilometers = lengthInKilometers;
             Status = RaceStatus.Pending;
         }
@@ -37,6 +40,11 @@ namespace RallySimulator.Domain.Core
         private Race()
         {
         }
+
+        /// <summary>
+        /// Gets the year.
+        /// </summary>
+        public int Year { get; private set; }
 
         /// <summary>
         /// Gets the length in kilometers.
