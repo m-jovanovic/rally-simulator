@@ -22,6 +22,16 @@ namespace RallySimulator.Domain.Core
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="VehicleSubtypeSpeed"/> class.
+        /// </summary>
+        /// <remarks>
+        /// Required by EF Core.
+        /// </remarks>
+        private VehicleSubtypeSpeed()
+        {
+        }
+
+        /// <summary>
         /// Gets the vehicle subtype.
         /// </summary>
         public VehicleSubtype VehicleSubtype => (VehicleSubtype)Id;

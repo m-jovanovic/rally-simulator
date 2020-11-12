@@ -15,14 +15,14 @@ namespace RallySimulator.Domain.Core
         /// Initializes a new instance of the <see cref="SpeedInKilometersPerHour"/> class.
         /// </summary>
         /// <param name="value">The speed value.</param>
-        private SpeedInKilometersPerHour(int value) => Value = value;
+        private SpeedInKilometersPerHour(decimal value) => Value = value;
 
         /// <summary>
         /// Gets the speed value.
         /// </summary>
-        public int Value { get; private set; }
+        public decimal Value { get; private set; }
 
-        public static LengthInKilometers operator *(SpeedInKilometersPerHour speed, int numberOfHours)
+        public static LengthInKilometers operator *(SpeedInKilometersPerHour speed, decimal numberOfHours)
         {
             Ensure.GreaterThanOrEqualToZero(
                 numberOfHours,
@@ -37,9 +37,9 @@ namespace RallySimulator.Domain.Core
         /// </summary>
         /// <param name="speed">The speed value.</param>
         /// <returns>The result of the speed creation process containing the speed or an error.</returns>
-        public static Result<SpeedInKilometersPerHour> Create(int speed) =>
+        public static Result<SpeedInKilometersPerHour> Create(decimal speed) =>
             Result.Success(speed)
-                .Ensure(x => x > 0, DomainErrors.SpeedInKilometersPerHour.LessThanOrEqualToZero)
+                .Ensure(x => x > decimal.Zero, DomainErrors.SpeedInKilometersPerHour.LessThanOrEqualToZero)
                 .Map(x => new SpeedInKilometersPerHour(x));
 
         /// <inheritdoc />

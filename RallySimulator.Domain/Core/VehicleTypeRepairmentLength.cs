@@ -25,6 +25,16 @@ namespace RallySimulator.Domain.Core
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="VehicleTypeRepairmentLength"/> class.
+        /// </summary>
+        /// <remarks>
+        /// Required by EF Core.
+        /// </remarks>
+        private VehicleTypeRepairmentLength()
+        {
+        }
+
+        /// <summary>
         /// Gets the vehicle type.
         /// </summary>
         public VehicleType VehicleType => (VehicleType)Id;

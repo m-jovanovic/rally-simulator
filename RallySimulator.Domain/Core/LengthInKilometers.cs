@@ -14,23 +14,28 @@ namespace RallySimulator.Domain.Core
         /// Initializes a new instance of the <see cref="LengthInKilometers"/> class.
         /// </summary>
         /// <param name="value">The length value.</param>
-        private LengthInKilometers(int value) => Value = value;
+        private LengthInKilometers(decimal value) => Value = value;
+
+        /// <summary>
+        /// Gets the 0 length in kilometers.
+        /// </summary>
+        public static LengthInKilometers Zero => new LengthInKilometers(decimal.Zero);
 
         /// <summary>
         /// Gets the rally length.
         /// </summary>
-        public int Value { get; private set; }
+        public decimal Value { get; private set; }
 
-        public static implicit operator int(LengthInKilometers lengthInKilometers) => lengthInKilometers.Value;
+        public static implicit operator decimal(LengthInKilometers lengthInKilometers) => lengthInKilometers.Value;
 
         /// <summary>
         /// Creates a new <see cref="LengthInKilometers"/> instance based on the specified value.
         /// </summary>
         /// <param name="length">The length value.</param>
         /// <returns>The result of the length creation process containing the length or an error.</returns>
-        public static Result<LengthInKilometers> Create(int length) =>
+        public static Result<LengthInKilometers> Create(decimal length) =>
             Result.Success(length)
-                .Ensure(x => x >= 0, DomainErrors.LengthInKilometers.LessThanZero)
+                .Ensure(x => x >= decimal.Zero, DomainErrors.LengthInKilometers.LessThanZero)
                 .Map(x => new LengthInKilometers(x));
 
         /// <inheritdoc />
