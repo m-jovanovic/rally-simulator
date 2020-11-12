@@ -8,15 +8,45 @@ namespace RallySimulator.Domain.Utility
     public static class Ensure
     {
         /// <summary>
-        /// Ensures that the specified <see cref="int"/> value is not less than or equal to zero.
+        /// Ensures that the specified <see cref="int"/> value is greater than zero.
         /// </summary>
         /// <param name="value">The value to check.</param>
         /// <param name="message">The message to show if the check fails.</param>
         /// <param name="argumentName">The name of the argument being checked.</param>
-        /// <exception cref="ArgumentException"> if the specified value is empty.</exception>
-        public static void NotLessThanOrEqualToZero(int value, string message, string argumentName)
+        /// <exception cref="ArgumentException"> if the specified value is less than or equal to zero.</exception>
+        public static void GreaterThanZero(int value, string message, string argumentName)
+        {
+            if (value <= 0)
+            {
+                throw new ArgumentException(message, argumentName);
+            }
+        }
+
+        /// <summary>
+        /// Ensures that the specified <see cref="int"/> value is greater than or equal to zero.
+        /// </summary>
+        /// <param name="value">The value to check.</param>
+        /// <param name="message">The message to show if the check fails.</param>
+        /// <param name="argumentName">The name of the argument being checked.</param>
+        /// <exception cref="ArgumentException"> if the specified value is less than zero.</exception>
+        public static void GreaterThanOrEqualToZero(int value, string message, string argumentName)
         {
             if (value < 0)
+            {
+                throw new ArgumentException(message, argumentName);
+            }
+        }
+
+        /// <summary>
+        /// Ensures that the specified <see cref="decimal"/> value is greater than or equal to zero.
+        /// </summary>
+        /// <param name="value">The value to check.</param>
+        /// <param name="message">The message to show if the check fails.</param>
+        /// <param name="argumentName">The name of the argument being checked.</param>
+        /// <exception cref="ArgumentException"> if the specified value is less than zero.</exception>
+        public static void GreaterThanOrEqualToZero(decimal value, string message, string argumentName)
+        {
+            if (value < decimal.Zero)
             {
                 throw new ArgumentException(message, argumentName);
             }
@@ -43,7 +73,7 @@ namespace RallySimulator.Domain.Utility
         /// <param name="value">The value to check.</param>
         /// <param name="message">The message to show if the check fails.</param>
         /// <param name="argumentName">The name of the argument being checked.</param>
-        /// <exception cref="ArgumentException"> if the specified value is null.</exception>
+        /// <exception cref="ArgumentException"> if the specified value is empty.</exception>
         public static void NotEmpty(DateTime value, string message, string argumentName)
         {
             if (value == default)

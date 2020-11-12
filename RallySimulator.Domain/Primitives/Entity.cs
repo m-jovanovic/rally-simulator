@@ -14,7 +14,7 @@ namespace RallySimulator.Domain.Primitives
         /// <param name="id">The entity identifier.</param>
         protected Entity(int id)
         {
-            Ensure.NotLessThanOrEqualToZero(id, "The entity identifier is required.", nameof(id));
+            Ensure.GreaterThanZero(id, "The entity identifier must be greater than zero.", nameof(id));
 
             Id = id;
         }
