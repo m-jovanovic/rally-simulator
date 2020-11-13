@@ -1,4 +1,5 @@
 ﻿using RallySimulator.Application.Abstractions.Messaging;
+using RallySimulator.Domain.Core;
 using RallySimulator.Domain.Primitives.Result;
 
 namespace RallySimulator.Application.Core.Races.Commands.CreateRace
@@ -13,10 +14,10 @@ namespace RallySimulator.Application.Core.Races.Commands.CreateRace
         /// </summary>
         /// <param name="year">The year.</param>
         /// <param name="length">The length.</param>
-        public CreateRaceCommand(int year, decimal length)
+        public CreateRaceCommand(int year, decimal? length)
         {
             Year = year;
-            Length = length;
+            Length = length ?? Race.DefaultLength;
         }
 
         /// <summary>

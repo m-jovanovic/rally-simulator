@@ -13,18 +13,12 @@ namespace RallySimulator.Application.Core.Races.Commands.CreateRace
     internal sealed class CreateRaceCommandHandler : ICommandHandler<CreateRaceCommand, Result>
     {
         private readonly IDbContext _dbContext;
-        private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateRaceCommandHandler"/> class.
         /// </summary>
         /// <param name="dbContext">The database context.</param>
-        /// <param name="unitOfWork">The unit of work.</param>
-        public CreateRaceCommandHandler(IDbContext dbContext, IUnitOfWork unitOfWork)
-        {
-            _dbContext = dbContext;
-            _unitOfWork = unitOfWork;
-        }
+        public CreateRaceCommandHandler(IDbContext dbContext) => _dbContext = dbContext;
 
         /// <inheritdoc />
         public async Task<Result> Handle(CreateRaceCommand request, CancellationToken cancellationToken)
@@ -40,7 +34,7 @@ namespace RallySimulator.Application.Core.Races.Commands.CreateRace
 
             _dbContext.Insert(race);
 
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return Result.Success();
         }

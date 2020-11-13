@@ -13,6 +13,6 @@
         /// <summary>
         /// Gets or sets the length.
         /// </summary>
-        public decimal Length { get; set; }
+        public decimal? Length { get; set; }
     }
 }

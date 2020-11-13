@@ -8,17 +8,17 @@ namespace RallySimulator.Application.Core.Races.Commands.CreateRace
     /// <summary>
     /// Represents the <see cref="CreateRaceCommand"/> validator.
     /// </summary>
-    public sealed class CreateRaceValidator : AbstractValidator<CreateRaceCommand>
+    public sealed class CreateRaceCommandValidator : AbstractValidator<CreateRaceCommand>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreateRaceValidator"/> class.
+        /// Initializes a new instance of the <see cref="CreateRaceCommandValidator"/> class.
         /// </summary>
         /// <param name="dateTime">The date and time.</param>
-        public CreateRaceValidator(IDateTime dateTime)
+        public CreateRaceCommandValidator(IDateTime dateTime)
         {
-            RuleFor(x => x.Year).GreaterThanOrEqualTo(dateTime.UtcNow.Year).WithError(Errors.Race.YearInThePast);
+            RuleFor(x => x.Year).GreaterThanOrEqualTo(dateTime.UtcNow.Year).WithError(ValidationErrors.Race.YearInThePast);
 
-            RuleFor(x => x.Length).GreaterThanOrEqualTo(0).WithError(Errors.Race.NegativeLength);
+            RuleFor(x => x.Length).GreaterThanOrEqualTo(0).WithError(ValidationErrors.Race.NegativeLength);
         }
     }
 }
