@@ -63,14 +63,17 @@ namespace RallySimulator.Persistence.Configurations
 
             builder.HasOne<VehicleSubtypeSpeed>()
                 .WithMany()
+                .HasForeignKey(vehicle => vehicle.VehicleSubtypeId)
                 .IsRequired();
 
             builder.HasOne<VehicleTypeRepairmentLength>()
                 .WithMany()
+                .HasForeignKey(vehicle => vehicle.VehicleTypeId)
                 .IsRequired();
 
             builder.HasOne<VehicleSubtypeMalfunctionProbability>()
                 .WithMany()
+                .HasForeignKey(vehicle => vehicle.VehicleSubtypeId)
                 .IsRequired();
 
             builder.HasMany(vehicle => vehicle.Malfunctions)

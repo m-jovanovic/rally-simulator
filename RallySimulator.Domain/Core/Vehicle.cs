@@ -78,12 +78,30 @@ namespace RallySimulator.Domain.Core
         /// <summary>
         /// Gets the vehicle type.
         /// </summary>
-        public VehicleType VehicleType { get; private set; }
+        public VehicleType VehicleType
+        {
+            get => (VehicleType)VehicleTypeId;
+            private set => VehicleTypeId = (int)value;
+        }
+
+        /// <summary>
+        /// Gets the vehicle type identifier.
+        /// </summary>
+        public int VehicleTypeId { get; private set; }
 
         /// <summary>
         /// Gets the vehicle subtype.
         /// </summary>
-        public VehicleSubtype VehicleSubtype { get; private set; }
+        public VehicleSubtype VehicleSubtype
+        {
+            get => (VehicleSubtype)VehicleSubtypeId;
+            private set => VehicleSubtypeId = (int)value;
+        }
+
+        /// <summary>
+        /// Gets the vehicle subtype identifier.
+        /// </summary>
+        public int VehicleSubtypeId { get; private set; }
 
         /// <summary>
         /// Gets the status.

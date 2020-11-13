@@ -20,5 +20,26 @@
             /// </summary>
             internal const string StartRace = "races/{raceId:int}";
         }
+
+        /// <summary>
+        /// Contains the vehicles routes.
+        /// </summary>
+        internal static class Vehicles
+        {
+            /// <summary>
+            /// The create vehicle route.
+            /// </summary>
+            internal const string CreateVehicle = "vehicles";
+
+            /// <summary>
+            /// The start vehicle route.
+            /// </summary>
+            internal const string UpdateVehicle = "vehicles/{vehicleId:int}";
+
+            /// <summary>
+            /// The remove vehicle route.
+            /// </summary>
+            internal const string RemoveVehicle = "vehicles/{vehicleId:int}";
+        }
     }
 }

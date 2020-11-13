@@ -34,7 +34,7 @@ namespace RallySimulator.Application.Validation
             /// </summary>
             internal static Error SubtypeIsRequired => new Error(
                 "Vehicle.SubtypeIsRequired",
-                "The vehicle type date is required.");
+                "The vehicle type is required.");
 
             /// <summary>
             /// Gets the vehicle identifier is required error.

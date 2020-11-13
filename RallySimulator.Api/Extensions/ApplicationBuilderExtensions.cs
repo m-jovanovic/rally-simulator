@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using RallySimulator.Api.Middleware;
 using RallySimulator.Persistence;
+using RallySimulator.Persistence.Extensions;
 
 namespace RallySimulator.Api.Extensions
 {
@@ -44,6 +45,8 @@ namespace RallySimulator.Api.Extensions
             using RallySimulatorDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<RallySimulatorDbContext>();
 
             dbContext.Database.EnsureCreated();
+
+            dbContext.SeedDatabase();
 
             return builder;
         }
