@@ -16,6 +16,13 @@ namespace RallySimulator.Domain.Core.Errors
             /// Gets the race has already started error.
             /// </summary>
             public static Error AlreadyStarted => new Error("Race.AlreadyStarted", "The race has already started.");
+
+            /// <summary>
+            /// Gets the another race is already running error.
+            /// </summary>
+            public static Error AnotherRaceIsAlreadyRunning => new Error(
+                "Race.AnotherRaceIsAlreadyRunning",
+                "The is already a race that is running and the current race can't be started.");
         }
     }
 }
