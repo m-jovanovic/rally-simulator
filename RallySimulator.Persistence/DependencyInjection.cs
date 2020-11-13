@@ -37,6 +37,8 @@ namespace RallySimulator.Persistence
 
             services.AddScoped<IRunningRaceChecker, RunningRaceChecker>();
 
+            services.AddSingleton<IDbConnection>(_ => _sqliteConnection);
+
             return services;
         }
     }

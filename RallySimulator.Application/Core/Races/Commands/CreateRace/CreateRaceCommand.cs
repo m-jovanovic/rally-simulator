@@ -13,11 +13,10 @@ namespace RallySimulator.Application.Core.Races.Commands.CreateRace
         /// Initializes a new instance of the <see cref="CreateRaceCommand"/> class.
         /// </summary>
         /// <param name="year">The year.</param>
-        /// <param name="length">The length.</param>
-        public CreateRaceCommand(int year, decimal? length)
+        public CreateRaceCommand(int year)
         {
             Year = year;
-            Length = length ?? Race.DefaultLength;
+            Length = Race.DefaultLength;
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using RallySimulator.Domain.Core.Errors;
+using RallySimulator.Domain.Core.Events;
 using RallySimulator.Domain.Primitives;
 using RallySimulator.Domain.Primitives.Result;
 using RallySimulator.Domain.Services;
@@ -95,6 +96,8 @@ namespace RallySimulator.Domain.Core
             StartTimeUtc = utcNow;
 
             Status = RaceStatus.Running;
+
+            AddDomainEvent(new RaceStartedDomainEvent(Id, utcNow));
 
             return Result.Success();
         }

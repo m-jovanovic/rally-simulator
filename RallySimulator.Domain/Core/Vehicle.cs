@@ -251,18 +251,6 @@ namespace RallySimulator.Domain.Core
         public void ChangeDistance(LengthInKilometers distance) => DistanceCovered = distance;
 
         /// <summary>
-        /// Starts the race for the vehicle.
-        /// </summary>
-        /// <param name="utcNow">The current date and time in UTC format.</param>
-        public void StartRace(DateTime utcNow)
-        {
-            // TODO: Add validation?
-            Status = VehicleStatus.Racing;
-
-            StartTimeUtc = utcNow;
-        }
-
-        /// <summary>
         /// Repairs the vehicle.
         /// </summary>
         public void Repair()

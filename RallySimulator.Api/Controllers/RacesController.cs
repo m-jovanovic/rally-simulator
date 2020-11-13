@@ -36,7 +36,7 @@ namespace RallySimulator.Api.Controllers
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateRace([FromBody] CreateRaceRequest request) =>
             await Result.Create(request, Errors.UnProcessableRequest)
-                .Map(value => new CreateRaceCommand(request.Year, request.Length))
+                .Map(value => new CreateRaceCommand(request.Year))
                 .Bind(command => Sender.Send(command))
                 .Match(Ok, BadRequest);
 

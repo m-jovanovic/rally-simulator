@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using RallySimulator.Domain.Primitives.Events;
 using RallySimulator.Domain.Utility;
 
 namespace RallySimulator.Domain.Primitives
@@ -8,6 +10,8 @@ namespace RallySimulator.Domain.Primitives
     /// </summary>
     public abstract class Entity : IEquatable<Entity>
     {
+        private readonly List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Entity"/> class.
         /// </summary>
@@ -33,6 +37,11 @@ namespace RallySimulator.Domain.Primitives
         /// Gets the entity identifier.
         /// </summary>
         public int Id { get; private set; }
+
+        /// <summary>
+        /// Gets the domain events. This collection is readonly.
+        /// </summary>
+        public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
         public static bool operator ==(Entity a, Entity b)
         {
@@ -90,5 +99,16 @@ namespace RallySimulator.Domain.Primitives
 
         /// <inheritdoc />
         public override int GetHashCode() => Id.GetHashCode() * 41;
+
+        /// <summary>
+        /// Clears all the domain events from the entity.
+        /// </summary>
+        public void ClearDomainEvents() => _domainEvents.Clear();
+
+        /// <summary>
+        /// Adds the specified domain event to the entity.
+        /// </summary>
+        /// <param name="domainEvent">The domain event.</param>
+        protected void AddDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
     }
 }

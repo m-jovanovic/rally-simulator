@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RallySimulator.Api.Extensions;
 using RallySimulator.Application;
+using RallySimulator.BackgroundTasks;
 using RallySimulator.Infrastructure;
 using RallySimulator.Persistence;
 
@@ -38,7 +39,8 @@ namespace RallySimulator.Api
             services
                 .AddApplication()
                 .AddInfrastructure()
-                .AddPersistence(Configuration);
+                .AddPersistence(Configuration)
+                .AddBackgroundTasks(Configuration);
 
             services.AddControllers();
 

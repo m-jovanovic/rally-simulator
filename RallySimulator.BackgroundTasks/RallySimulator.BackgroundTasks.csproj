@@ -7,7 +7,11 @@
   <Import Project="..\CodeAnalysis.targets" />
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RallySimulator.Persistence\RallySimulator.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

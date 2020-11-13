@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using RallySimulator.Application.Abstractions.Common;
@@ -18,15 +21,20 @@ namespace RallySimulator.Persistence
     public sealed class RallySimulatorDbContext : DbContext, IDbContext
     {
         private readonly IDateTime _dateTime;
+        private readonly IPublisher _publisher;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RallySimulatorDbContext"/> class.
         /// </summary>
         /// <param name="options">The database context options.</param>
         /// <param name="dateTime">The current date and time.</param>
-        public RallySimulatorDbContext(DbContextOptions options, IDateTime dateTime)
-            : base(options) =>
+        /// <param name="publisher">The publisher.</param>
+        public RallySimulatorDbContext(DbContextOptions options, IDateTime dateTime, IPublisher publisher)
+            : base(options)
+        {
             _dateTime = dateTime;
+            _publisher = publisher;
+        }
 
         /// <inheritdoc />
         public new DbSet<TEntity> Set<TEntity>()
@@ -60,13 +68,15 @@ namespace RallySimulator.Persistence
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The number of entities that have been saved.</returns>
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             DateTime utcNow = _dateTime.UtcNow;
 
             UpdateAuditableEntities(utcNow);
 
-            return base.SaveChangesAsync(cancellationToken);
+            await PublishDomainEvents(cancellationToken);
+
+            return await base.SaveChangesAsync(cancellationToken);
         }
 
         /// <inheritdoc />
@@ -97,6 +107,26 @@ namespace RallySimulator.Persistence
                     entityEntry.Property(nameof(IAuditableEntity.ModifiedOnUtc)).CurrentValue = utcNow;
                 }
             }
+        }
+
+        /// <summary>
+        /// Publishes and then clears all the domain events that exist within the current transaction.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        private async Task PublishDomainEvents(CancellationToken cancellationToken)
+        {
+            var entities = ChangeTracker
+                .Entries<Entity>()
+                .Where(entityEntry => entityEntry.Entity.DomainEvents.Any())
+                .ToList();
+
+            var domainEvents = entities.SelectMany(entityEntry => entityEntry.Entity.DomainEvents).ToList();
+
+            entities.ForEach(entityEntry => entityEntry.Entity.ClearDomainEvents());
+
+            IEnumerable<Task> tasks = domainEvents.Select(domainEvent => _publisher.Publish(domainEvent, cancellationToken));
+
+            await Task.WhenAll(tasks);
         }
     }
 }
