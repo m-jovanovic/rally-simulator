@@ -14,6 +14,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RallySimulator.Application"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RallySimulator.Infrastructure", "RallySimulator.Infrastructure\RallySimulator.Infrastructure.csproj", "{14321B0D-EB1C-4382-89E0-F8A51F333E00}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RallySimulator.Persistence", "RallySimulator.Persistence\RallySimulator.Persistence.csproj", "{F67C5FC5-5A8E-4ADF-AF22-0C545CF0C858}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{14321B0D-EB1C-4382-89E0-F8A51F333E00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14321B0D-EB1C-4382-89E0-F8A51F333E00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14321B0D-EB1C-4382-89E0-F8A51F333E00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F67C5FC5-5A8E-4ADF-AF22-0C545CF0C858}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F67C5FC5-5A8E-4ADF-AF22-0C545CF0C858}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F67C5FC5-5A8E-4ADF-AF22-0C545CF0C858}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F67C5FC5-5A8E-4ADF-AF22-0C545CF0C858}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
