@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using RallySimulator.Domain.Core.Errors;
 using RallySimulator.Domain.Primitives;
 using RallySimulator.Domain.Primitives.Result;
+using RallySimulator.Domain.Services;
 using RallySimulator.Domain.Utility;
 
 namespace RallySimulator.Domain.Core
@@ -75,13 +77,19 @@ namespace RallySimulator.Domain.Core
         /// <summary>
         /// Starts the race.
         /// </summary>
+        /// <param name="runningRaceChecker">The running race checker.</param>
         /// <param name="utcNow">The current date and time in UTC format.</param>
         /// <returns>The success result if the operation was successful, otherwise a failure result with an error.</returns>
-        public Result StartRace(DateTime utcNow)
+        public async Task<Result> StartRace(IRunningRaceChecker runningRaceChecker, DateTime utcNow)
         {
             if (StartTimeUtc.HasValue)
             {
                 return Result.Failure(DomainErrors.Race.AlreadyStarted);
+            }
+
+            if (await runningRaceChecker.IsAnyRaceRunning())
+            {
+                return Result.Failure(DomainErrors.Race.AnotherRaceIsAlreadyRunning);
             }
 
             StartTimeUtc = utcNow;

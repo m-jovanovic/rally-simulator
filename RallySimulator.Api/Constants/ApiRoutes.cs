@@ -14,6 +14,11 @@
             /// The create race route.
             /// </summary>
             internal const string CreateRace = "races";
+
+            /// <summary>
+            /// The start race route.
+            /// </summary>
+            internal const string StartRace = "races/{raceId:int}";
         }
     }
 }

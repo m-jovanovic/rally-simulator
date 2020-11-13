@@ -22,7 +22,7 @@ namespace RallySimulator.Domain.Core.Errors
             /// </summary>
             public static Error AnotherRaceIsAlreadyRunning => new Error(
                 "Race.AnotherRaceIsAlreadyRunning",
-                "The is already a race that is running and the current race can't be started.");
+                "There is already a race that is running and the current race can't be started.");
         }
     }
 }

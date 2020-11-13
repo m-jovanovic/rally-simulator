@@ -1,14 +1,13 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using RallySimulator.Application.Abstractions.Common;
 using RallySimulator.Application.Abstractions.Data;
 using RallySimulator.Application.Abstractions.Messaging;
 using RallySimulator.Application.Validation;
 using RallySimulator.Domain.Core;
-using RallySimulator.Domain.Core.Errors;
 using RallySimulator.Domain.Primitives.Maybe;
 using RallySimulator.Domain.Primitives.Result;
+using RallySimulator.Domain.Services;
 
 namespace RallySimulator.Application.Core.Races.Commands.StartRace
 {
@@ -18,16 +17,19 @@ namespace RallySimulator.Application.Core.Races.Commands.StartRace
     internal sealed class StartRaceCommandHandler : ICommandHandler<StartRaceCommand, Result>
     {
         private readonly IDbContext _dbContext;
+        private readonly IRunningRaceChecker _runningRaceChecker;
         private readonly IDateTime _dateTime;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StartRaceCommandHandler"/> class.
         /// </summary>
         /// <param name="dbContext">The database context.</param>
+        /// <param name="runningRaceChecker">The running race checker.</param>
         /// <param name="dateTime">The date and time.</param>
-        public StartRaceCommandHandler(IDbContext dbContext, IDateTime dateTime)
+        public StartRaceCommandHandler(IDbContext dbContext, IRunningRaceChecker runningRaceChecker, IDateTime dateTime)
         {
             _dbContext = dbContext;
+            _runningRaceChecker = runningRaceChecker;
             _dateTime = dateTime;
         }
 
@@ -41,12 +43,7 @@ namespace RallySimulator.Application.Core.Races.Commands.StartRace
                 return Result.Failure(ValidationErrors.Race.NotFound);
             }
 
-            if (await _dbContext.Set<Race>().AnyAsync(x => x.Status == RaceStatus.Running, cancellationToken))
-            {
-                return Result.Failure(DomainErrors.Race.AnotherRaceIsAlreadyRunning);
-            }
-
-            Result result = maybeRace.Value.StartRace(_dateTime.UtcNow);
+            Result result = await maybeRace.Value.StartRace(_runningRaceChecker, _dateTime.UtcNow);
 
             if (result.IsFailure)
             {

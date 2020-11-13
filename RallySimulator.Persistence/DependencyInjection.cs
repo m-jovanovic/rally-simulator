@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RallySimulator.Application.Abstractions.Data;
+using RallySimulator.Domain.Services;
+using RallySimulator.Persistence.Services;
 
 namespace RallySimulator.Persistence
 {
@@ -32,6 +34,8 @@ namespace RallySimulator.Persistence
             services.AddDbContext<RallySimulatorDbContext>(options => options.UseSqlite(_sqliteConnection));
 
             services.AddScoped<IDbContext>(serviceProvider => serviceProvider.GetRequiredService<RallySimulatorDbContext>());
+
+            services.AddScoped<IRunningRaceChecker, RunningRaceChecker>();
 
             return services;
         }
