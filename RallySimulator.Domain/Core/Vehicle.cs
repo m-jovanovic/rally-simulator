@@ -22,14 +22,12 @@ namespace RallySimulator.Domain.Core
         /// <param name="teamName">The team name.</param>
         /// <param name="modelName">The model name.</param>
         /// <param name="manufacturingDate">The manufacturing date.</param>
-        /// <param name="vehicleType">The vehicle type.</param>
         /// <param name="vehicleSubtype">The vehicle subtype.</param>
         public Vehicle(
             int raceId,
             TeamName teamName,
             ModelName modelName,
             DateTime manufacturingDate,
-            VehicleType vehicleType,
             VehicleSubtype vehicleSubtype)
         {
             Ensure.GreaterThanZero(raceId, "The race identifier is required.", nameof(raceId));
@@ -41,7 +39,7 @@ namespace RallySimulator.Domain.Core
             TeamName = teamName;
             ModelName = modelName;
             ManufacturingDate = manufacturingDate.Date;
-            VehicleType = vehicleType;
+            VehicleType = DetermineVehicleType(vehicleSubtype);
             VehicleSubtype = vehicleSubtype;
             Status = VehicleStatus.Pending;
             DistanceCovered = LengthInKilometers.Zero;
@@ -159,14 +157,12 @@ namespace RallySimulator.Domain.Core
         /// <param name="teamName">The team name.</param>
         /// <param name="modelName">The model name.</param>
         /// <param name="manufacturingDate">The manufacturing date.</param>
-        /// <param name="vehicleType">The vehicle type.</param>
         /// <param name="vehicleSubtype">The vehicle subtype.</param>
         /// <returns>The success result if the update operation was successful, otherwise a failure result with an error.</returns>
         public Result UpdateInformation(
             TeamName teamName,
             ModelName modelName,
             DateTime manufacturingDate,
-            VehicleType vehicleType,
             VehicleSubtype vehicleSubtype)
         {
             if (!Pending)
@@ -181,7 +177,7 @@ namespace RallySimulator.Domain.Core
             TeamName = teamName;
             ModelName = modelName;
             ManufacturingDate = manufacturingDate.Date;
-            VehicleType = vehicleType;
+            VehicleType = DetermineVehicleType(vehicleSubtype);
             VehicleSubtype = vehicleSubtype;
 
             return Result.Success();
@@ -270,6 +266,22 @@ namespace RallySimulator.Domain.Core
 
             FinishTimeUtc = utcNow;
         }
+
+        /// <summary>
+        /// Determines the vehicle type based on the specified vehicle subtype.
+        /// </summary>
+        /// <param name="vehicleSubtype">The vehicle subtype.</param>
+        /// <returns>The vehicle type based on the specified vehicle subtype.</returns>
+        private static VehicleType DetermineVehicleType(VehicleSubtype vehicleSubtype) =>
+            vehicleSubtype switch
+            {
+                VehicleSubtype.Truck => VehicleType.Truck,
+                VehicleSubtype.TerrainCar => VehicleType.Car,
+                VehicleSubtype.SportsCar => VehicleType.Car,
+                VehicleSubtype.CrossMotorcycle => VehicleType.Motorcycle,
+                VehicleSubtype.SportMotorcycle => VehicleType.Motorcycle,
+                _ => throw new ArgumentOutOfRangeException(nameof(vehicleSubtype), vehicleSubtype, null)
+            };
 
         /// <summary>
         /// Adds the malfunction of the specified type to the vehicle.
