@@ -18,24 +18,24 @@ namespace RallySimulator.Domain.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="Vehicle"/> class.
         /// </summary>
-        /// <param name="raceId">The race identifier.</param>
+        /// <param name="race">The race.</param>
         /// <param name="teamName">The team name.</param>
         /// <param name="modelName">The model name.</param>
         /// <param name="manufacturingDate">The manufacturing date.</param>
         /// <param name="vehicleSubtype">The vehicle subtype.</param>
         public Vehicle(
-            int raceId,
+            Race race,
             TeamName teamName,
             ModelName modelName,
             DateTime manufacturingDate,
             VehicleSubtype vehicleSubtype)
         {
-            Ensure.GreaterThanZero(raceId, "The race identifier is required.", nameof(raceId));
+            Ensure.NotNull(race, "The race is required.", nameof(race));
             Ensure.NotNull(teamName, "The team name is required.", nameof(teamName));
             Ensure.NotNull(modelName, "The model name is required.", nameof(modelName));
             Ensure.NotEmpty(manufacturingDate, "The manufacturing date is required", nameof(manufacturingDate));
 
-            RaceId = raceId;
+            RaceId = race.Id;
             TeamName = teamName;
             ModelName = modelName;
             ManufacturingDate = manufacturingDate.Date;
@@ -111,14 +111,14 @@ namespace RallySimulator.Domain.Core
         public DateTime? FinishTimeUtc { get; private set; }
 
         /// <summary>
-        /// Gets the vehicle speed.
-        /// </summary>
-        public VehicleSubtypeSpeed Speed { get; private set; }
-
-        /// <summary>
         /// Gets the repairment length.
         /// </summary>
         public VehicleTypeRepairmentLength RepairmentLength { get; private set; }
+
+        /// <summary>
+        /// Gets the vehicle speed.
+        /// </summary>
+        public VehicleSubtypeSpeed Speed { get; private set; }
 
         /// <summary>
         /// Gets the malfunction probability.

@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Data;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RallySimulator.Application.Abstractions.Data;
@@ -10,6 +12,8 @@ namespace RallySimulator.Persistence
     /// </summary>
     public static class DependencyInjection
     {
+        private static SqliteConnection _sqliteConnection;
+
         /// <summary>
         /// Registers the necessary services with the DI framework.
         /// </summary>
@@ -18,8 +22,14 @@ namespace RallySimulator.Persistence
         /// <returns>The same service collection.</returns>
         public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<RallySimulatorDbContext>(options =>
-                options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
+            _sqliteConnection = new SqliteConnection(configuration.GetConnectionString("DefaultConnection"));
+
+            if (_sqliteConnection.State != ConnectionState.Open)
+            {
+                _sqliteConnection.Open();
+            }
+
+            services.AddDbContext<RallySimulatorDbContext>(options => options.UseSqlite(_sqliteConnection));
 
             services.AddScoped<IDbContext>(serviceProvider => serviceProvider.GetRequiredService<RallySimulatorDbContext>());
 

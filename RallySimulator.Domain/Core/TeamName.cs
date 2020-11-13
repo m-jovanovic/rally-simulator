@@ -22,6 +22,16 @@ namespace RallySimulator.Domain.Core
         private TeamName(string value) => Value = value;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="TeamName"/> class.
+        /// </summary>
+        /// <remarks>
+        /// Required by EF Core.
+        /// </remarks>
+        private TeamName()
+        {
+        }
+
+        /// <summary>
         /// Gets the name value.
         /// </summary>
         public string Value { get; }

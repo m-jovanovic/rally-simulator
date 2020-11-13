@@ -52,12 +52,7 @@ namespace RallySimulator.Application.Core.Vehicles.Commands.CreateVehicle
 
             var vehicleSubtype = (VehicleSubtype)request.VehicleSubtype;
 
-            var vehicle = new Vehicle(
-                race.Id,
-                teamNameResult.Value,
-                modelNameResult.Value,
-                request.ManufacturingDate,
-                vehicleSubtype);
+            var vehicle = new Vehicle(race, teamNameResult.Value, modelNameResult.Value, request.ManufacturingDate, vehicleSubtype);
 
             _dbContext.Insert(vehicle);
 
