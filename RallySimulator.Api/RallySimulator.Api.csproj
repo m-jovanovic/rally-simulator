@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <Import Project="..\CodeAnalysis.targets" />
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RallySimulator.Infrastructure\RallySimulator.Infrastructure.csproj" />
+    <ProjectReference Include="..\RallySimulator.Persistence\RallySimulator.Persistence.csproj" />
+  </ItemGroup>
+
+
+
+</Project>
