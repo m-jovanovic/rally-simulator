@@ -2,24 +2,24 @@
 using RallySimulator.Application.Abstractions.Messaging;
 using RallySimulator.Domain.Primitives.Result;
 
-namespace RallySimulator.Application.Core.Vehicles.Commands.CreateVehicle
+namespace RallySimulator.Application.Core.Vehicles.Commands.UpdateVehicle
 {
     /// <summary>
-    /// Represents the command for creating a vehicle.
+    /// Represents the command for updating vehicle information.
     /// </summary>
-    public sealed class CreateVehicleCommand : ICommand<Result>
+    public sealed class UpdateVehicleCommand : ICommand<Result>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreateVehicleCommand"/> class.
+        /// Initializes a new instance of the <see cref="UpdateVehicleCommand"/> class.
         /// </summary>
-        /// <param name="raceId">The race identifier.</param>
+        /// <param name="vehicleId">The race identifier.</param>
         /// <param name="teamName">The team name.</param>
         /// <param name="modelName">The model name.</param>
         /// <param name="manufacturingDate">The manufacturing date.</param>
         /// <param name="vehicleSubtype">The vehicle subtype.</param>
-        public CreateVehicleCommand(int raceId, string teamName, string modelName, DateTime manufacturingDate, int vehicleSubtype)
+        public UpdateVehicleCommand(int vehicleId, string teamName, string modelName, DateTime manufacturingDate, int vehicleSubtype)
         {
-            RaceId = raceId;
+            VehicleId = vehicleId;
             TeamName = teamName;
             ModelName = modelName;
             ManufacturingDate = manufacturingDate;
@@ -27,9 +27,9 @@ namespace RallySimulator.Application.Core.Vehicles.Commands.CreateVehicle
         }
 
         /// <summary>
-        /// Gets the race identifier.
+        /// Gets the vehicle identifier.
         /// </summary>
-        public int RaceId { get; }
+        public int VehicleId { get; }
 
         /// <summary>
         /// Gets the team name.
