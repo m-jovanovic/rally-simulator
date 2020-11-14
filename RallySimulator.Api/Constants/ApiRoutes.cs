@@ -45,6 +45,11 @@
             /// The remove vehicle route.
             /// </summary>
             internal const string RemoveVehicle = "vehicles/{vehicleId:int}";
+
+            /// <summary>
+            /// The get vehicle route.
+            /// </summary>
+            internal const string GetVehicleStatistics = "vehicles/{vehicleId:int}/statistics";
         }
     }
 }

@@ -9,6 +9,8 @@ using RallySimulator.Application.Contracts.Vehicles;
 using RallySimulator.Application.Core.Vehicles.Commands.CreateVehicle;
 using RallySimulator.Application.Core.Vehicles.Commands.RemoveVehicle;
 using RallySimulator.Application.Core.Vehicles.Commands.UpdateVehicle;
+using RallySimulator.Application.Core.Vehicles.Queries.GetVehicleStatistics;
+using RallySimulator.Domain.Primitives.Maybe;
 using RallySimulator.Domain.Primitives.Result;
 
 namespace RallySimulator.Api.Controllers
@@ -80,5 +82,18 @@ namespace RallySimulator.Api.Controllers
             await Result.Success(new RemoveVehicleCommand(vehicleId))
                 .Bind(command => Sender.Send(command))
                 .Match(NoContent, BadRequest);
+
+        /// <summary>
+        /// Gets the vehicle statistics for the vehicle with the specified identifier.
+        /// </summary>
+        /// <param name="vehicleId">The vehicle identifier.</param>
+        /// <returns>200 - OK if the vehicle with the specified identifier exists, otherwise 404 - Not Found.</returns>
+        [HttpGet(ApiRoutes.Vehicles.GetVehicleStatistics)]
+        [ProducesResponseType(typeof(VehicleStatisticsResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetVehicleStatistics(int vehicleId) =>
+            await Maybe<GetVehicleStatisticsQuery>.From(new GetVehicleStatisticsQuery(vehicleId))
+                .Bind(command => Sender.Send(command))
+                .Match(Ok, NotFound);
     }
 }

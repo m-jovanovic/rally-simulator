@@ -59,9 +59,9 @@ namespace RallySimulator.Api.Controllers
         /// Gets the race status for the race with the specified identifier.
         /// </summary>
         /// <param name="raceId">The race identifier.</param>
-        /// <returns>200 - OK if the race was started successfully, otherwise 404 - Not Found.</returns>
+        /// <returns>200 - OK if the race with the specified identifier exists, otherwise 404 - Not Found.</returns>
         [HttpGet(ApiRoutes.Races.GetRaceStatus)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RaceStatusResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetRaceStatus(int raceId) =>
             await Maybe<GetRaceStatusQuery>.From(new GetRaceStatusQuery(raceId))
