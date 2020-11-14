@@ -43,33 +43,36 @@ namespace RallySimulator.Application.Core.Races.Queries.GetRaceStatus
 
             Race race = maybeRace.Value;
 
-            // TODO: Figure out how to improve performance here.
+            var vehicleStatistics = await (
+                from vehicle in _dbContext.Set<Vehicle>().AsNoTracking()
+                where vehicle.RaceId == race.Id
+                group vehicle by new { vehicle.VehicleType, vehicle.Status }
+                into grouping
+                select new
+                {
+                    Type = grouping.Key.VehicleType.ToString(),
+                    Status = grouping.Key.Status.ToString(),
+                    Count = grouping.Count()
+                }).ToListAsync(cancellationToken);
+
             var response = new RaceStatusResponse
             {
                 RaceId = race.Id,
                 StartTimeUtc = race.StartTimeUtc,
                 FinishTimeUtc = race.FinishTimeUtc,
                 Status = race.Status.ToString(),
-                VehiclesByStatuses = await (
-                    from vehicle in _dbContext.Set<Vehicle>().AsNoTracking()
-                    where vehicle.RaceId == race.Id
-                    group vehicle by vehicle.Status
-                    into groupedByType
-                    select new RaceStatusResponse.VehiclesByStatus
+                VehiclesByType = vehicleStatistics.GroupBy(x => x.Type)
+                    .Select(x => new VehiclesByType
                     {
-                        Status = groupedByType.Key.ToString(),
-                        Count = groupedByType.Count()
-                    }).ToListAsync(cancellationToken),
-                VehiclesByTypes = await (
-                    from vehicle in _dbContext.Set<Vehicle>().AsNoTracking()
-                    where vehicle.RaceId == race.Id
-                    group vehicle by vehicle.VehicleType
-                    into groupedByType
-                    select new RaceStatusResponse.VehiclesByType
+                        Type = x.Key,
+                        Count = x.Sum(g => g.Count)
+                    }).ToList(),
+                VehiclesByStatus = vehicleStatistics.GroupBy(x => x.Status)
+                    .Select(x => new VehiclesByStatus
                     {
-                        Type = groupedByType.Key.ToString(),
-                        Count = groupedByType.Count()
-                    }).ToListAsync(cancellationToken)
+                        Status = x.Key,
+                        Count = x.Sum(g => g.Count)
+                    }).ToList(),
             };
 
             return response;

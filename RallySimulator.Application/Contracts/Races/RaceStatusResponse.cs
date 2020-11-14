@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using RallySimulator.Domain.Core;
 
 namespace RallySimulator.Application.Contracts.Races
 {
@@ -32,43 +31,11 @@ namespace RallySimulator.Application.Contracts.Races
         /// <summary>
         /// Gets or sets the vehicles grouped by vehicle status.
         /// </summary>
-        public List<VehiclesByStatus> VehiclesByStatuses { get; set; }
+        public List<VehiclesByStatus> VehiclesByStatus { get; set; }
 
         /// <summary>
         /// Gets or sets the vehicles grouped by vehicle type.
         /// </summary>
-        public List<VehiclesByType> VehiclesByTypes { get; set; }
-
-        /// <summary>
-        /// Represents the number of vehicles by vehicle status.
-        /// </summary>
-        public class VehiclesByStatus
-        {
-            /// <summary>
-            /// Gets or sets the status.
-            /// </summary>
-            public string Status { get; set; }
-
-            /// <summary>
-            /// Gets or sets the number of vehicles.
-            /// </summary>
-            public int Count { get; set; }
-        }
-
-        /// <summary>
-        /// Represents the number of vehicles by vehicle type.
-        /// </summary>
-        public class VehiclesByType
-        {
-            /// <summary>
-            /// Gets or sets the type.
-            /// </summary>
-            public string Type { get; set; }
-
-            /// <summary>
-            /// Gets or sets the number of vehicles.
-            /// </summary>
-            public int Count { get; set; }
-        }
+        public List<VehiclesByType> VehiclesByType { get; set; }
     }
 }
