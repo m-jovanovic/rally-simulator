@@ -46,7 +46,7 @@ namespace RallySimulator.Application.Core.Races.Queries.GetRaceLeaderboard
                         VehicleId = vehicle.Id,
                         Distance = $"{vehicle.DistanceCovered.Value} km",
                         FinishTime = vehicle.FinishTimeUtc,
-                        Subtype = vehicle.VehicleSubtype.ToString()
+                        VehicleSubtype = vehicle.VehicleSubtype.ToString()
                     })
                     .ToListAsync(cancellationToken);
 
@@ -64,7 +64,7 @@ namespace RallySimulator.Application.Core.Races.Queries.GetRaceLeaderboard
                     VehicleId = x.VehicleId,
                     Distance = x.Distance,
                     FinishTime = x.FinishTime,
-                    Subtype = x.Subtype
+                    VehicleSubtype = x.VehicleSubtype
                 }).ToList()
             };
 

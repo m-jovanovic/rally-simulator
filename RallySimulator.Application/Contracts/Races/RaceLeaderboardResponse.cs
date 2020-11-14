@@ -46,7 +46,7 @@ namespace RallySimulator.Application.Contracts.Races
             /// <summary>
             /// Gets or sets the subtype.
             /// </summary>
-            public string Subtype { get; set; }
+            public string VehicleSubtype { get; set; }
         }
     }
 }

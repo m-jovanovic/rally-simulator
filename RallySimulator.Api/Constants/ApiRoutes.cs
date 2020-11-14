@@ -55,6 +55,11 @@
             /// The get vehicle route.
             /// </summary>
             internal const string GetVehicleStatistics = "vehicles/{vehicleId:int}/statistics";
+
+            /// <summary>
+            /// The get vehicle subtypes route.
+            /// </summary>
+            internal const string GetVehicleSubtypes = "vehicles/subtypes";
         }
     }
 }

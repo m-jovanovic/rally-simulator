@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using RallySimulator.Application.Core.Vehicles.Commands.CreateVehicle;
 using RallySimulator.Application.Core.Vehicles.Commands.RemoveVehicle;
 using RallySimulator.Application.Core.Vehicles.Commands.UpdateVehicle;
 using RallySimulator.Application.Core.Vehicles.Queries.GetVehicleStatistics;
+using RallySimulator.Application.Core.Vehicles.Queries.GetVehicleSubtypes;
 using RallySimulator.Domain.Primitives.Maybe;
 using RallySimulator.Domain.Primitives.Result;
 
@@ -95,5 +97,13 @@ namespace RallySimulator.Api.Controllers
             await Maybe<GetVehicleStatisticsQuery>.From(new GetVehicleStatisticsQuery(vehicleId))
                 .Bind(command => Sender.Send(command))
                 .Match(Ok, NotFound);
+
+        /// <summary>
+        /// Gets the vehicle subtypes collection.
+        /// </summary>
+        /// <returns>200 - OK response with the vehicle subtypes.</returns>
+        [HttpGet(ApiRoutes.Vehicles.GetVehicleSubtypes)]
+        [ProducesResponseType(typeof(IReadOnlyCollection<VehicleSubtypeResponse>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetVehicleSubtypes() => Ok(await Sender.Send(new GetVehicleSubtypesQuery()));
     }
 }
