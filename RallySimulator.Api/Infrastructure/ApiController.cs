@@ -43,6 +43,6 @@ namespace RallySimulator.Api.Infrastructure
         /// Creates an <see cref="NotFoundResult"/> that produces a <see cref="StatusCodes.Status404NotFound"/>.
         /// </summary>
         /// <returns>The created <see cref="NotFoundResult"/> for the response.</returns>
-        protected new IActionResult NotFound() => base.NotFound();
+        protected new IActionResult NotFound() => NotFound("The requested resource was not found.");
     }
 }

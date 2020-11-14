@@ -19,6 +19,11 @@
             /// The start race route.
             /// </summary>
             internal const string StartRace = "races/{raceId:int}";
+
+            /// <summary>
+            /// The get race status route.
+            /// </summary>
+            internal const string GetRaceStatus = "races/{raceId:int}/status";
         }
 
         /// <summary>
