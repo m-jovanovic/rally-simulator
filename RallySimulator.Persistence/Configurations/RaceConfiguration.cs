@@ -28,6 +28,8 @@ namespace RallySimulator.Persistence.Configurations
 
             builder.Property(race => race.StartTimeUtc).IsRequired(false);
 
+            builder.Property(race => race.NumberOfHoursPassedFromRaceStart).IsRequired(false);
+
             builder.Property(race => race.FinishTimeUtc).IsRequired(false);
 
             builder.Property(race => race.CreatedOnUtc).IsRequired();

@@ -21,6 +21,8 @@ namespace RallySimulator.Domain.Core
         /// </summary>
         public decimal Value { get; private set; }
 
+        public static implicit operator decimal(MalfunctionProbability malfunctionProbability) => malfunctionProbability.Value;
+
         /// <summary>
         /// Creates a new <see cref="SpeedInKilometersPerHour"/> instance based on the specified value.
         /// </summary>

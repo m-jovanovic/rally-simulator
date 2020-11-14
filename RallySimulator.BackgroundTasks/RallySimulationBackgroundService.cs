@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using RallySimulator.Application.Abstractions.Common;
 using RallySimulator.BackgroundTasks.Settings;
 using RallySimulator.Domain.Core;
 using RallySimulator.Domain.Primitives.Maybe;
@@ -24,7 +24,8 @@ namespace RallySimulator.BackgroundTasks
         private readonly ILogger<RallySimulationBackgroundService> _logger;
         private readonly BackgroundTaskSettings _backgroundTaskSettings;
         private readonly IServiceProvider _serviceProvider;
-        private readonly RandomNumberGenerator _rng;
+        private readonly IDateTime _dateTime;
+        private readonly Random _random;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RallySimulationBackgroundService"/> class.
@@ -32,23 +33,18 @@ namespace RallySimulator.BackgroundTasks
         /// <param name="logger">The logger.</param>
         /// <param name="backgroundTaskSettingsOptions">The background task settings options.</param>
         /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="dateTime">The date and time.</param>
         public RallySimulationBackgroundService(
             ILogger<RallySimulationBackgroundService> logger,
             IOptions<BackgroundTaskSettings> backgroundTaskSettingsOptions,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider,
+            IDateTime dateTime)
         {
             _logger = logger;
             _backgroundTaskSettings = backgroundTaskSettingsOptions.Value;
             _serviceProvider = serviceProvider;
-            _rng = RandomNumberGenerator.Create();
-        }
-
-        /// <inheritdoc />
-        public override void Dispose()
-        {
-            _rng?.Dispose();
-
-            base.Dispose();
+            _dateTime = dateTime;
+            _random = new Random();
         }
 
         /// <inheritdoc />
@@ -90,16 +86,53 @@ namespace RallySimulator.BackgroundTasks
         private async Task SimulateOneHourPassing(Race race, RallySimulatorDbContext dbContext)
         {
             List<Vehicle> vehicles = await dbContext.Set<Vehicle>()
-                .Include(x => x.RepairmentLength)
-                .Include(x => x.Speed)
-                .Include(x => x.MalfunctionProbability)
-                .Include(x => x.Malfunctions)
-                .Where(x => x.RaceId == race.Id)
-                .ToListAsync();
+               .Include(x => x.RepairmentLength)
+               .Include(x => x.Speed)
+               .Include(x => x.MalfunctionProbability)
+               .Include(x => x.Malfunctions)
+               .Where(x => x.RaceId == race.Id)
+               .ToListAsync();
 
-            foreach (Vehicle vehicle in vehicles)
+            VehicleStatus[] brokenOrCompletedRace = { VehicleStatus.Broken, VehicleStatus.CompletedRace };
+
+            foreach (Vehicle vehicle in vehicles.Where(x => !brokenOrCompletedRace.Contains(x.Status)))
             {
-                // TODO: Implement simulation.
+                if (vehicle.Status == VehicleStatus.WaitingForRepair && !vehicle.TryRepair())
+                {
+                    continue;
+                }
+
+                decimal malfunctionProbability = (decimal)_random.NextDouble();
+
+                if (vehicle.MalfunctionProbability.LightMalfunctionProbability >= malfunctionProbability)
+                {
+                    vehicle.AddLightMalfunction();
+
+                    continue;
+                }
+
+                if (vehicle.MalfunctionProbability.HeavyMalfunctionProbability >= malfunctionProbability)
+                {
+                    vehicle.AddHeavyMalfunction();
+
+                    continue;
+                }
+
+                vehicle.IncrementDistance(vehicle.Speed.SpeedInKilometersPerHour * 1.0m, race.LengthInKilometers);
+
+                vehicle.SimulateOneHourPassing();
+
+                if (vehicle.DistanceCovered == race.LengthInKilometers)
+                {
+                    vehicle.CompleteRace();
+                }
+            }
+
+            race.SimulateOneHourPassing();
+
+            if (vehicles.All(x => brokenOrCompletedRace.Contains(x.Status)))
+            {
+                race.CompleteRace();
             }
 
             await dbContext.SaveChangesAsync();

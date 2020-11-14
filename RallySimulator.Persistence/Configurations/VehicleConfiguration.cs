@@ -34,7 +34,7 @@ namespace RallySimulator.Persistence.Configurations
 
             builder.Property(vehicle => vehicle.Status).HasDefaultValue(VehicleStatus.Pending).IsRequired();
 
-            builder.Property(vehicle => vehicle.RepairCompletesOnUtc).IsRequired(false);
+            builder.Property(vehicle => vehicle.NumberOfHoursLeftUntilRepaired).IsRequired(false);
 
             builder.OwnsOne(vehicle => vehicle.DistanceCovered, lengthInKilometersBuilder =>
                 lengthInKilometersBuilder
@@ -43,6 +43,8 @@ namespace RallySimulator.Persistence.Configurations
                     .IsRequired());
 
             builder.Property(vehicle => vehicle.StartTimeUtc).IsRequired(false);
+
+            builder.Property(vehicle => vehicle.NumberOfHoursPassedFromRaceStart).IsRequired(false);
 
             builder.Property(vehicle => vehicle.FinishTimeUtc).IsRequired(false);
 
@@ -61,17 +63,17 @@ namespace RallySimulator.Persistence.Configurations
                 .HasForeignKey(vehicle => vehicle.RaceId)
                 .IsRequired();
 
-            builder.HasOne<VehicleSubtypeSpeed>()
+            builder.HasOne(vehicle => vehicle.Speed)
                 .WithMany()
                 .HasForeignKey(vehicle => vehicle.VehicleSubtypeId)
                 .IsRequired();
 
-            builder.HasOne<VehicleTypeRepairmentLength>()
+            builder.HasOne(vehicle => vehicle.RepairmentLength)
                 .WithMany()
                 .HasForeignKey(vehicle => vehicle.VehicleTypeId)
                 .IsRequired();
 
-            builder.HasOne<VehicleSubtypeMalfunctionProbability>()
+            builder.HasOne(vehicle => vehicle.MalfunctionProbability)
                 .WithMany()
                 .HasForeignKey(vehicle => vehicle.VehicleSubtypeId)
                 .IsRequired();

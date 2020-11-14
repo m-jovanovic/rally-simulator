@@ -109,9 +109,9 @@ namespace RallySimulator.Domain.Core
         public VehicleStatus Status { get; private set; }
 
         /// <summary>
-        /// Gets the date and time the repair completes on, in UTC format.
+        /// Gets number of hours left until the vehicle is repaired.
         /// </summary>
-        public DateTime? RepairCompletesOnUtc { get; private set; }
+        public int? NumberOfHoursLeftUntilRepaired { get; private set; }
 
         /// <summary>
         /// Gets the distance in kilometers the vehicle has covered.
@@ -122,6 +122,11 @@ namespace RallySimulator.Domain.Core
         /// Gets the race start time in UTC format.
         /// </summary>
         public DateTime? StartTimeUtc { get; private set; }
+
+        /// <summary>
+        /// Gets the number of hours that have passed from race start.
+        /// </summary>
+        public int? NumberOfHoursPassedFromRaceStart { get; private set; }
 
         /// <summary>
         /// Gets the race finish time in UTC format.
@@ -162,7 +167,7 @@ namespace RallySimulator.Domain.Core
         /// <summary>
         /// Gets a value indicating whether or not the vehicle is waiting for repair.
         /// </summary>
-        private bool WaitingForRepair => Status == VehicleStatus.WaitingForRepair && RepairCompletesOnUtc.HasValue;
+        private bool WaitingForRepair => Status == VehicleStatus.WaitingForRepair && NumberOfHoursLeftUntilRepaired.HasValue;
 
         /// <summary>
         /// Gets a value indicating whether or not the vehicle is broken.
@@ -204,9 +209,8 @@ namespace RallySimulator.Domain.Core
         /// <summary>
         /// Adds a light malfunction to the vehicle.
         /// </summary>
-        /// <param name="utcNow">The current date and time in UTC format.</param>
         /// <returns>The success result if the operation was successful, otherwise a failure result with an error.</returns>
-        public Result AddLightMalfunction(DateTime utcNow)
+        public Result AddLightMalfunction()
         {
             Result result = CheckIfVehicleCanSufferMalfunction();
 
@@ -219,7 +223,7 @@ namespace RallySimulator.Domain.Core
 
             Status = VehicleStatus.WaitingForRepair;
 
-            RepairCompletesOnUtc = utcNow.AddHours(RepairmentLength.RepairmentLengthInHours);
+            NumberOfHoursLeftUntilRepaired = RepairmentLength.RepairmentLengthInHours;
 
             return Result.Success();
         }
@@ -245,32 +249,53 @@ namespace RallySimulator.Domain.Core
         }
 
         /// <summary>
-        /// Changes the distance the vehicle has covered.
+        /// Simulates one hour passing during the race.
         /// </summary>
-        /// <param name="distance">The new distance.</param>
-        public void ChangeDistance(LengthInKilometers distance) => DistanceCovered = distance;
+        public void SimulateOneHourPassing() => NumberOfHoursPassedFromRaceStart = (NumberOfHoursPassedFromRaceStart ?? 0) + 1;
 
         /// <summary>
-        /// Repairs the vehicle.
+        /// Increments the distance the vehicle has covered.
         /// </summary>
-        public void Repair()
+        /// <param name="distanceIncrement">The distance increment.</param>
+        /// <param name="maxDistance">The maximum distance.</param>
+        public void IncrementDistance(LengthInKilometers distanceIncrement, LengthInKilometers maxDistance)
         {
-            // TODO: Add validation?
+            DistanceCovered = LengthInKilometers.Create(DistanceCovered + distanceIncrement).Value;
+
+            if (DistanceCovered > maxDistance)
+            {
+                DistanceCovered = LengthInKilometers.Create(maxDistance).Value;
+            }
+        }
+
+        /// <summary>
+        /// Attempts to repair the vehicle.
+        /// </summary>
+        /// <returns>True if the vehicle was successfully repaired, otherwise false.</returns>
+        public bool TryRepair()
+        {
+            NumberOfHoursLeftUntilRepaired -= 1;
+
+            if (NumberOfHoursLeftUntilRepaired > 0)
+            {
+                return false;
+            }
+
             Status = VehicleStatus.Racing;
 
-            RepairCompletesOnUtc = null;
+            NumberOfHoursLeftUntilRepaired = null;
+
+            return true;
         }
 
         /// <summary>
         /// Completes the race for the vehicle.
         /// </summary>
-        /// <param name="utcNow">The current date and time in UTC format.</param>
-        public void CompleteRace(DateTime utcNow)
+        public void CompleteRace()
         {
-            // TODO: Add validation?
             Status = VehicleStatus.CompletedRace;
 
-            FinishTimeUtc = utcNow;
+            FinishTimeUtc = StartTimeUtc!.Value.AddHours(NumberOfHoursPassedFromRaceStart!.Value);
         }
 
         /// <summary>

@@ -65,6 +65,11 @@ namespace RallySimulator.Domain.Core
         public DateTime? StartTimeUtc { get; private set; }
 
         /// <summary>
+        /// Gets the number of hours that have passed from race start.
+        /// </summary>
+        public int? NumberOfHoursPassedFromRaceStart { get; private set; }
+
+        /// <summary>
         /// Gets the finish time in UTC format.
         /// </summary>
         public DateTime? FinishTimeUtc { get; private set; }
@@ -105,13 +110,16 @@ namespace RallySimulator.Domain.Core
         /// <summary>
         /// Completes the race.
         /// </summary>
-        /// <param name="utcNow">The current date and time in UTC format.</param>
-        public void CompleteRace(DateTime utcNow)
+        public void CompleteRace()
         {
-            // TODO: Add validation?
-            FinishTimeUtc = utcNow;
-
             Status = RaceStatus.Finished;
+
+            FinishTimeUtc = StartTimeUtc!.Value.AddHours(NumberOfHoursPassedFromRaceStart!.Value);
         }
+
+        /// <summary>
+        /// Simulates one hour passing during the race.
+        /// </summary>
+        public void SimulateOneHourPassing() => NumberOfHoursPassedFromRaceStart = (NumberOfHoursPassedFromRaceStart ?? 0) + 1;
     }
 }
