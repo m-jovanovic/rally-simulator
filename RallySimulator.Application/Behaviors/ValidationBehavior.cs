@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
-using RallySimulator.Application.Abstractions.Messaging;
 using ValidationException = RallySimulator.Application.Exceptions.ValidationException;
 
 namespace RallySimulator.Application.Behaviors
@@ -29,7 +28,7 @@ namespace RallySimulator.Application.Behaviors
         /// <inheritdoc />
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            if (request is IQuery<TResponse>)
+            if (!_validators.Any())
             {
                 return await next();
             }

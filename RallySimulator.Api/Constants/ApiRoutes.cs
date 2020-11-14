@@ -29,6 +29,11 @@
             /// The get race leaderboard route.
             /// </summary>
             internal const string GetRaceLeaderboard = "races/{raceId:int}/leaderboard";
+
+            /// <summary>
+            /// The get race leaderboard for vehicle type route.
+            /// </summary>
+            internal const string GetRaceLeaderboardForVehicleType = "races/leaderboardForVehicleType";
         }
 
         /// <summary>
@@ -55,6 +60,11 @@
             /// The get vehicle route.
             /// </summary>
             internal const string GetVehicleStatistics = "vehicles/{vehicleId:int}/statistics";
+
+            /// <summary>
+            /// The get vehicle types route.
+            /// </summary>
+            internal const string GetVehicleTypes = "vehicles/types";
 
             /// <summary>
             /// The get vehicle subtypes route.

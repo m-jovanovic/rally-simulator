@@ -12,6 +12,7 @@ using RallySimulator.Application.Core.Vehicles.Commands.RemoveVehicle;
 using RallySimulator.Application.Core.Vehicles.Commands.UpdateVehicle;
 using RallySimulator.Application.Core.Vehicles.Queries.GetVehicleStatistics;
 using RallySimulator.Application.Core.Vehicles.Queries.GetVehicleSubtypes;
+using RallySimulator.Application.Core.Vehicles.Queries.GetVehicleTypes;
 using RallySimulator.Domain.Primitives.Maybe;
 using RallySimulator.Domain.Primitives.Result;
 
@@ -97,6 +98,14 @@ namespace RallySimulator.Api.Controllers
             await Maybe<GetVehicleStatisticsQuery>.From(new GetVehicleStatisticsQuery(vehicleId))
                 .Bind(command => Sender.Send(command))
                 .Match(Ok, NotFound);
+
+        /// <summary>
+        /// Gets the vehicle types collection.
+        /// </summary>
+        /// <returns>200 - OK response with the vehicle types.</returns>
+        [HttpGet(ApiRoutes.Vehicles.GetVehicleTypes)]
+        [ProducesResponseType(typeof(IReadOnlyCollection<VehicleTypeResponse>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetVehicleTypes() => Ok(await Sender.Send(new GetVehicleTypesQuery()));
 
         /// <summary>
         /// Gets the vehicle subtypes collection.

@@ -16,7 +16,8 @@ namespace RallySimulator.Application.Core.Vehicles.Queries.GetVehicleSubtypes
         : IQueryHandler<GetVehicleSubtypesQuery, IReadOnlyCollection<VehicleSubtypeResponse>>
     {
         /// <inheritdoc />
-        public Task<IReadOnlyCollection<VehicleSubtypeResponse>> Handle(GetVehicleSubtypesQuery request, CancellationToken cancellationToken)
+        public Task<IReadOnlyCollection<VehicleSubtypeResponse>> Handle(
+            GetVehicleSubtypesQuery request, CancellationToken cancellationToken)
         {
             var vehicleSubtypes = (
                 from int value in Enum.GetValues(typeof(VehicleSubtype))

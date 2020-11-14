@@ -9,6 +9,7 @@ using RallySimulator.Application.Contracts.Races;
 using RallySimulator.Application.Core.Races.Commands.CreateRace;
 using RallySimulator.Application.Core.Races.Commands.StartRace;
 using RallySimulator.Application.Core.Races.Queries.GetRaceLeaderboard;
+using RallySimulator.Application.Core.Races.Queries.GetRaceLeaderboardForVehicleType;
 using RallySimulator.Application.Core.Races.Queries.GetRaceStatus;
 using RallySimulator.Domain.Primitives.Maybe;
 using RallySimulator.Domain.Primitives.Result;
@@ -79,6 +80,21 @@ namespace RallySimulator.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetRaceLeaderboard(int raceId) =>
             await Maybe<GetRaceLeaderboardQuery>.From(new GetRaceLeaderboardQuery(raceId))
+                .Bind(command => Sender.Send(command))
+                .Match(Ok, NotFound);
+
+        /// <summary>
+        /// Gets the race leaderboard for the race with the specified identifier.
+        /// </summary>
+        /// <param name="raceId">The race identifier.</param>
+        /// <param name="vehicleType">The vehicle type.</param>
+        /// <returns>200 - OK if the race with the specified identifier exists, otherwise 404 - Not Found.</returns>
+        [HttpGet(ApiRoutes.Races.GetRaceLeaderboardForVehicleType)]
+        [ProducesResponseType(typeof(RaceLeaderboardForVehicleTypeResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetRaceLeaderboardForVehicleType(int raceId, int vehicleType) =>
+            await Maybe<GetRaceLeaderboardForVehicleTypeQuery>.From(new GetRaceLeaderboardForVehicleTypeQuery(raceId, vehicleType))
                 .Bind(command => Sender.Send(command))
                 .Match(Ok, NotFound);
     }

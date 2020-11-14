@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,34 +10,38 @@ using RallySimulator.Application.Contracts.Races;
 using RallySimulator.Domain.Core;
 using RallySimulator.Domain.Primitives.Maybe;
 
-namespace RallySimulator.Application.Core.Races.Queries.GetRaceLeaderboard
+namespace RallySimulator.Application.Core.Races.Queries.GetRaceLeaderboardForVehicleType
 {
     /// <summary>
-    /// Represents the <see cref="GetRaceLeaderboardQuery"/> handler.
+    /// Represents the <see cref="GetRaceLeaderboardForVehicleTypeQuery"/> handler.
     /// </summary>
-    internal sealed class GetRaceLeaderboardQueryHandler : IQueryHandler<GetRaceLeaderboardQuery, Maybe<RaceLeaderboardResponse>>
+    internal sealed class GetRaceLeaderboardForVehicleTypeQueryHandler
+        : IQueryHandler<GetRaceLeaderboardForVehicleTypeQuery, Maybe<RaceLeaderboardForVehicleTypeResponse>>
     {
         private readonly IDbContext _dbContext;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetRaceLeaderboardQueryHandler"/> class.
+        /// Initializes a new instance of the <see cref="GetRaceLeaderboardForVehicleTypeQueryHandler"/> class.
         /// </summary>
         /// <param name="dbContext">The database context.</param>
-        public GetRaceLeaderboardQueryHandler(IDbContext dbContext) => _dbContext = dbContext;
+        public GetRaceLeaderboardForVehicleTypeQueryHandler(IDbContext dbContext) => _dbContext = dbContext;
 
         /// <inheritdoc />
-        public async Task<Maybe<RaceLeaderboardResponse>> Handle(GetRaceLeaderboardQuery request, CancellationToken cancellationToken)
+        public async Task<Maybe<RaceLeaderboardForVehicleTypeResponse>> Handle(
+            GetRaceLeaderboardForVehicleTypeQuery request, CancellationToken cancellationToken)
         {
-            if (request.RaceId <= 0)
+            if (request.RaceId <= 0 || !Enum.IsDefined(typeof(VehicleType), request.VehicleType))
             {
-                return Maybe<RaceLeaderboardResponse>.None;
+                return Maybe<RaceLeaderboardForVehicleTypeResponse>.None;
             }
+
+            var vehicleType = (VehicleType)request.VehicleType;
 
             List<LeaderboardVehicle> leaderboardVehicles =
                 await _dbContext
                     .Set<Vehicle>()
                     .AsNoTracking()
-                    .Where(x => x.RaceId == request.RaceId)
+                    .Where(x => x.RaceId == request.RaceId && x.VehicleType == vehicleType)
                     .OrderBy(x => x.FinishTimeUtc.HasValue)
                     .ThenBy(x => x.FinishTimeUtc)
                     .ThenByDescending(x => x.DistanceCovered.Value)
@@ -52,12 +57,13 @@ namespace RallySimulator.Application.Core.Races.Queries.GetRaceLeaderboard
 
             if (!leaderboardVehicles.Any())
             {
-                return Maybe<RaceLeaderboardResponse>.None;
+                return Maybe<RaceLeaderboardForVehicleTypeResponse>.None;
             }
 
-            var response = new RaceLeaderboardResponse
+            var response = new RaceLeaderboardForVehicleTypeResponse
             {
                 RaceId = request.RaceId,
+                VehicleType = vehicleType.ToString(),
                 Leaderboard = leaderboardVehicles.Select((x, index) => new LeaderboardVehicle
                 {
                     Position = index + 1,
