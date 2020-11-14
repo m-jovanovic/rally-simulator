@@ -97,6 +97,8 @@ namespace RallySimulator.BackgroundTasks
 
             foreach (Vehicle vehicle in vehicles.Where(x => !brokenOrCompletedRace.Contains(x.Status)))
             {
+                vehicle.SimulateOneHourPassing();
+
                 if (vehicle.Status == VehicleStatus.WaitingForRepair && !vehicle.TryRepair())
                 {
                     continue;
@@ -119,8 +121,6 @@ namespace RallySimulator.BackgroundTasks
                 }
 
                 vehicle.IncrementDistance(vehicle.Speed.SpeedInKilometersPerHour * 1.0m, race.LengthInKilometers);
-
-                vehicle.SimulateOneHourPassing();
 
                 if (vehicle.DistanceCovered == race.LengthInKilometers)
                 {

@@ -24,6 +24,11 @@
             /// The get race status route.
             /// </summary>
             internal const string GetRaceStatus = "races/{raceId:int}/status";
+
+            /// <summary>
+            /// The get race leaderboard route.
+            /// </summary>
+            internal const string GetRaceLeaderboard = "races/{raceId:int}/leaderboard";
         }
 
         /// <summary>

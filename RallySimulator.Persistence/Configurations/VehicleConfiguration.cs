@@ -39,6 +39,7 @@ namespace RallySimulator.Persistence.Configurations
             builder.OwnsOne(vehicle => vehicle.DistanceCovered, lengthInKilometersBuilder =>
                 lengthInKilometersBuilder
                     .Property(lengthInKilometers => lengthInKilometers.Value)
+                    .HasConversion<double>()
                     .HasColumnName(nameof(Vehicle.DistanceCovered))
                     .IsRequired());
 
