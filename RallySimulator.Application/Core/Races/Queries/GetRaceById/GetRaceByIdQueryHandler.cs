@@ -1,16 +1,14 @@
-﻿
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RallySimulator.Application.Abstractions.Data;
 using RallySimulator.Application.Abstractions.Messaging;
 using RallySimulator.Application.Contracts.Races;
-using RallySimulator.Application.Contracts.Vehicles;
-using RallySimulator.Application.Core.Races.Queries.GetRaceById;
+using RallySimulator.Application.Core.Vehicles.Queries.GetVehicleById;
 using RallySimulator.Domain.Core;
 using RallySimulator.Domain.Primitives.Maybe;
 
-namespace RallySimulator.Application.Core.Vehicles.Queries.GetVehicleById
+namespace RallySimulator.Application.Core.Races.Queries.GetRaceById
 {
     /// <summary>
     /// Represents the <see cref="GetVehicleByIdQuery"/> handler.
