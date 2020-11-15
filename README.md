@@ -1,7 +1,9 @@
 # Rally Simulator :bike: :car: :truck:
 
+\
 ![Build](https://github.com/thelanmi/rally-simulator/workflows/Build/badge.svg)
 
+\
 **Vehicle racing simulator implemented using .NET Core 3.1 and a SQLite in-memory database.**
 
 ## Technologies
@@ -42,3 +44,14 @@ The persistence layer is responsible for implementing database related concerns.
 ### Api
 
 The Api layer represents the last layer in the onion, and is responsible for glueing the entire system together. The only function of this layer is to accept HTTP requests, package them up into commands or queries, and send them somewhere else in the system to be processed and then return the result of that processing in the response. The controllers are designed to be as *thin* as possible.
+
+## Race simulation
+
+The race simulation is implemented using the **BackgroundService** class, which makes it easy to register a long running background task. The background task starts running as soon as the application starts up, it runs an endless loop searching for a race that is in the *running* state and then processes all of the vehicles of that race - basically simulating *the passing of one hour* during the race. After each loop iteration, the task is dormant for a certain amount of time that is controlled through the application settings. The race is moved to the *completed* state once all of the participating vehicles have either been broke or have completed the race.
+
+
+## Swagger UI
+
+The Api project will open up the Swagger UI once it starts. Here you can browse the documentation for each endpoint, making it easy to test all of the endpoints.
+
+[Swagger UI](images/swagger_ui.png)
