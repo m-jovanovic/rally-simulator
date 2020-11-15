@@ -3,7 +3,7 @@
 \
 ![Build](https://github.com/thelanmi/rally-simulator/workflows/Build/badge.svg)
 
-\
+
 **Vehicle racing simulator implemented using .NET Core 3.1 and a SQLite in-memory database.**
 
 ## Technologies
@@ -54,4 +54,4 @@ The race simulation is implemented using the **BackgroundService** class, which 
 
 The Api project will open up the Swagger UI once it starts. Here you can browse the documentation for each endpoint, making it easy to test all of the endpoints.
 
-[Swagger UI](images/swagger_ui.png)
+![Swagger UI](images/swagger_ui.png)
