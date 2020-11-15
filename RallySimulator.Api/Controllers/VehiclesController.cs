@@ -10,7 +10,9 @@ using RallySimulator.Application.Contracts.Vehicles;
 using RallySimulator.Application.Core.Vehicles.Commands.CreateVehicle;
 using RallySimulator.Application.Core.Vehicles.Commands.RemoveVehicle;
 using RallySimulator.Application.Core.Vehicles.Commands.UpdateVehicle;
+using RallySimulator.Application.Core.Vehicles.Queries.GetVehicleById;
 using RallySimulator.Application.Core.Vehicles.Queries.GetVehicleStatistics;
+using RallySimulator.Application.Core.Vehicles.Queries.GetVehicleStatuses;
 using RallySimulator.Application.Core.Vehicles.Queries.GetVehicleSubtypes;
 using RallySimulator.Application.Core.Vehicles.Queries.GetVehicleTypes;
 using RallySimulator.Domain.Primitives.Maybe;
@@ -91,6 +93,19 @@ namespace RallySimulator.Api.Controllers
         /// </summary>
         /// <param name="vehicleId">The vehicle identifier.</param>
         /// <returns>200 - OK if the vehicle with the specified identifier exists, otherwise 404 - Not Found.</returns>
+        [HttpGet(ApiRoutes.Vehicles.GetVehicleById)]
+        [ProducesResponseType(typeof(VehicleResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetVehicleById(int vehicleId) =>
+            await Maybe<GetVehicleByIdQuery>.From(new GetVehicleByIdQuery(vehicleId))
+                .Bind(command => Sender.Send(command))
+                .Match(Ok, NotFound);
+
+        /// <summary>
+        /// Gets the vehicle statistics for the vehicle with the specified identifier.
+        /// </summary>
+        /// <param name="vehicleId">The vehicle identifier.</param>
+        /// <returns>200 - OK if the vehicle with the specified identifier exists, otherwise 404 - Not Found.</returns>
         [HttpGet(ApiRoutes.Vehicles.GetVehicleStatistics)]
         [ProducesResponseType(typeof(VehicleStatisticsResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -114,5 +129,13 @@ namespace RallySimulator.Api.Controllers
         [HttpGet(ApiRoutes.Vehicles.GetVehicleSubtypes)]
         [ProducesResponseType(typeof(IReadOnlyCollection<VehicleSubtypeResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetVehicleSubtypes() => Ok(await Sender.Send(new GetVehicleSubtypesQuery()));
+
+        /// <summary>
+        /// Gets the vehicle statuses collection.
+        /// </summary>
+        /// <returns>200 - OK response with the vehicle statuses.</returns>
+        [HttpGet(ApiRoutes.Vehicles.GetVehicleStatuses)]
+        [ProducesResponseType(typeof(IReadOnlyCollection<VehicleStatusResponse>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetVehicleStatuses() => Ok(await Sender.Send(new GetVehicleStatusesQuery()));
     }
 }

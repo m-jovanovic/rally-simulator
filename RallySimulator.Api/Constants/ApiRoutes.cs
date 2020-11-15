@@ -21,6 +21,11 @@
             internal const string StartRace = "races/{raceId:int}";
 
             /// <summary>
+            /// The get race race by id route.
+            /// </summary>
+            internal const string GetRaceById = "races/{raceId:int}";
+
+            /// <summary>
             /// The get race status route.
             /// </summary>
             internal const string GetRaceStatus = "races/{raceId:int}/status";
@@ -57,6 +62,11 @@
             internal const string RemoveVehicle = "vehicles/{vehicleId:int}";
 
             /// <summary>
+            /// The get race race by id route.
+            /// </summary>
+            internal const string GetVehicleById = "vehicles/{vehicleId:int}";
+
+            /// <summary>
             /// The get vehicle route.
             /// </summary>
             internal const string GetVehicleStatistics = "vehicles/{vehicleId:int}/statistics";
@@ -70,6 +80,11 @@
             /// The get vehicle subtypes route.
             /// </summary>
             internal const string GetVehicleSubtypes = "vehicles/subtypes";
+
+            /// <summary>
+            /// The get vehicle statuses route.
+            /// </summary>
+            internal const string GetVehicleStatuses = "vehicles/statuses";
         }
     }
 }

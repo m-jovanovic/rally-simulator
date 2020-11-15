@@ -8,6 +8,7 @@ using RallySimulator.Api.Infrastructure;
 using RallySimulator.Application.Contracts.Races;
 using RallySimulator.Application.Core.Races.Commands.CreateRace;
 using RallySimulator.Application.Core.Races.Commands.StartRace;
+using RallySimulator.Application.Core.Races.Queries.GetRaceById;
 using RallySimulator.Application.Core.Races.Queries.GetRaceLeaderboard;
 using RallySimulator.Application.Core.Races.Queries.GetRaceLeaderboardForVehicleType;
 using RallySimulator.Application.Core.Races.Queries.GetRaceStatus;
@@ -56,6 +57,19 @@ namespace RallySimulator.Api.Controllers
             await Result.Success(new StartRaceCommand(raceId))
                 .Bind(command => Sender.Send(command))
                 .Match(Ok, BadRequest);
+
+        /// <summary>
+        /// Gets the race leaderboard for the race with the specified identifier.
+        /// </summary>
+        /// <param name="raceId">The race identifier.</param>
+        /// <returns>200 - OK if the race with the specified identifier exists, otherwise 404 - Not Found.</returns>
+        [HttpGet(ApiRoutes.Races.GetRaceById)]
+        [ProducesResponseType(typeof(RaceResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetRaceById(int raceId) =>
+            await Maybe<GetRaceByIdQuery>.From(new GetRaceByIdQuery(raceId))
+                .Bind(command => Sender.Send(command))
+                .Match(Ok, NotFound);
 
         /// <summary>
         /// Gets the race status for the race with the specified identifier.

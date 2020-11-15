@@ -18,7 +18,7 @@ namespace RallySimulator.Application.Core.Vehicles.Queries.GetVehicleTypes
         /// <inheritdoc />
         public Task<IReadOnlyCollection<VehicleTypeResponse>> Handle(GetVehicleTypesQuery request, CancellationToken cancellationToken)
         {
-            var vehicleSubtypes = (
+            var vehicleTypes = (
                 from int value in Enum.GetValues(typeof(VehicleType))
                 select new VehicleTypeResponse
                 {
@@ -26,7 +26,7 @@ namespace RallySimulator.Application.Core.Vehicles.Queries.GetVehicleTypes
                     Name = Enum.GetName(typeof(VehicleType), value)
                 }).ToList();
 
-            return Task.FromResult((IReadOnlyCollection<VehicleTypeResponse>)vehicleSubtypes);
+            return Task.FromResult((IReadOnlyCollection<VehicleTypeResponse>)vehicleTypes);
         }
     }
 }
