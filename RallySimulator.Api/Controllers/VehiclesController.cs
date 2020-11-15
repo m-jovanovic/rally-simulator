@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -6,11 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using RallySimulator.Api.Constants;
 using RallySimulator.Api.Contracts;
 using RallySimulator.Api.Infrastructure;
+using RallySimulator.Application.Contracts.Common;
 using RallySimulator.Application.Contracts.Vehicles;
 using RallySimulator.Application.Core.Vehicles.Commands.CreateVehicle;
 using RallySimulator.Application.Core.Vehicles.Commands.RemoveVehicle;
 using RallySimulator.Application.Core.Vehicles.Commands.UpdateVehicle;
 using RallySimulator.Application.Core.Vehicles.Queries.GetVehicleById;
+using RallySimulator.Application.Core.Vehicles.Queries.GetVehicles;
 using RallySimulator.Application.Core.Vehicles.Queries.GetVehicleStatistics;
 using RallySimulator.Application.Core.Vehicles.Queries.GetVehicleStatuses;
 using RallySimulator.Application.Core.Vehicles.Queries.GetVehicleSubtypes;
@@ -113,6 +116,48 @@ namespace RallySimulator.Api.Controllers
             await Maybe<GetVehicleStatisticsQuery>.From(new GetVehicleStatisticsQuery(vehicleId))
                 .Bind(command => Sender.Send(command))
                 .Match(Ok, NotFound);
+
+        /// <summary>
+        /// Gets the vehicles for the specified parameters.
+        /// </summary>
+        /// <param name="raceId">The race identifier.</param>
+        /// <param name="team">The team.</param>
+        /// <param name="model">The model.</param>
+        /// <param name="manufacturingDateFrom">The manufacturing date from.</param>
+        /// <param name="manufacturingDateTo">The manufacturing date to.</param>
+        /// <param name="status">The status.</param>
+        /// <param name="distanceFrom">The distance from.</param>
+        /// <param name="distanceTo">The distance to.</param>
+        /// <param name="page">The page.</param>
+        /// <param name="pageSize">The page size.</param>
+        /// <param name="orderBy">The order by.</param>
+        /// <returns>200 - OK response with the paged result of vehicles for the specified parameters.</returns>
+        [HttpGet(ApiRoutes.Vehicles.GetVehicles)]
+        [ProducesResponseType(typeof(PagedResult<VehicleResponse>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetVehicles(
+            int raceId,
+            string team,
+            string model,
+            DateTime? manufacturingDateFrom,
+            DateTime? manufacturingDateTo,
+            int status,
+            decimal? distanceFrom,
+            decimal? distanceTo,
+            int page,
+            int pageSize,
+            string orderBy) =>
+            Ok(await Sender.Send(new GetVehiclesQuery(
+                raceId,
+                team,
+                model,
+                manufacturingDateFrom,
+                manufacturingDateTo,
+                status,
+                distanceFrom,
+                distanceTo,
+                page,
+                pageSize,
+                orderBy)));
 
         /// <summary>
         /// Gets the vehicle types collection.

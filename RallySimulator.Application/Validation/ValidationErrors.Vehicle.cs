@@ -45,6 +45,20 @@ namespace RallySimulator.Application.Validation
             /// Gets the vehicle not found error.
             /// </summary>
             internal static Error NotFound => new Error("Vehicle.NotFound", "The vehicle with the specified identifier was not found.");
+
+            /// <summary>
+            /// Gets the vehicle manufacturing date to precedes date from error.
+            /// </summary>
+            internal static Error ManufacturingDateToPrecedesDateFrom => new Error(
+                "Vehicle.ManufacturingDateToPrecedesDateFrom",
+                "The specified manufacturing date to precedes the specified manufacturing date from.");
+
+            /// <summary>
+            /// Gets the vehicle distance to is less than distance from error.
+            /// </summary>
+            internal static Error DistanceToIsLessThanDistanceFrom => new Error(
+                "Vehicle.DistanceToIsLessThanDistanceFrom",
+                "The specified distance to is less than the specified distance from.");
         }
     }
 }

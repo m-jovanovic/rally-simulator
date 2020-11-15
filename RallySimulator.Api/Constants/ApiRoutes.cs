@@ -72,6 +72,11 @@
             internal const string GetVehicleStatistics = "vehicles/{vehicleId:int}/statistics";
 
             /// <summary>
+            /// The get vehicles route.
+            /// </summary>
+            internal const string GetVehicles = "vehicles";
+
+            /// <summary>
             /// The get vehicle types route.
             /// </summary>
             internal const string GetVehicleTypes = "vehicles/types";
