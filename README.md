@@ -1,4 +1,4 @@
-# Rally Simulator :car:
+# Rally Simulator :bike: :car: :truck:
 
 ![Build](https://github.com/thelanmi/rally-simulator/workflows/Build/badge.svg)
 
@@ -19,7 +19,7 @@
 
 ## System Architecture
 
-The solution utilizes an *onion* styled architecture and consists of multiple layers, where each layer depends only on itself and the layers that are placed below in the hierarchy.
+The solution utilizes an *onion* styled architecture and consists of multiple layers, where each layer depends only on itself and the layers that are below it in the hierarchy.
 
 ### Domain
 
@@ -28,6 +28,8 @@ The domain layer contains all of the entities, value objects, enums, interfaces 
 ### Application
 
 The application layer is responsible for orchestrating all of the application logic and the necessary use-cases. It depends on the domain layer, but has no dependencies on any other layer. This layer defines additional interfaces that are required for supporting the application logic, that are implemented by outside layers. For example, the ***IDbContext*** interface is defined in this layer but implemented by the Persistence layer.
+
+This layer utilizes the **CQRS pattern** for structuring the application logic into commands and queries, using the MediatR library.
 
 ### Infrastucture
 
