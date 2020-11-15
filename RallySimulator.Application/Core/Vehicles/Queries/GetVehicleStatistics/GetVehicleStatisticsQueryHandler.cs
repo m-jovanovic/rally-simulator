@@ -49,7 +49,7 @@ namespace RallySimulator.Application.Core.Vehicles.Queries.GetVehicleStatistics
             {
                 VehicleId = vehicle.Id,
                 RaceId = vehicle.RaceId,
-                Distance = $"{vehicle.DistanceCovered.Value} km",
+                Distance = $"{vehicle.Distance.Value} km",
                 StartTimeUtc = vehicle.StartTimeUtc,
                 FinishTimeUtc = vehicle.FinishTimeUtc,
                 Status = vehicle.Status.ToString(),

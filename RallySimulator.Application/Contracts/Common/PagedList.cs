@@ -4,19 +4,19 @@ using System.Collections.Generic;
 namespace RallySimulator.Application.Contracts.Common
 {
     /// <summary>
-    /// Represents the page result response.
+    /// Represents the paged list.
     /// </summary>
     /// <typeparam name="T">The type of the response.</typeparam>
-    public sealed class PagedResult<T>
+    public sealed class PagedList<T>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PagedResult{T}"/> class.
+        /// Initializes a new instance of the <see cref="PagedList{T}"/> class.
         /// </summary>
         /// <param name="items">The readonly collection of items.</param>
         /// <param name="totalCount">The total count of items.</param>
         /// <param name="page">The page.</param>
         /// <param name="pageSize">The page size.</param>
-        public PagedResult(IReadOnlyCollection<T> items, int totalCount, int page, int pageSize)
+        public PagedList(IReadOnlyCollection<T> items, int totalCount, int page, int pageSize)
         {
             Items = items;
             TotalCount = totalCount;
@@ -27,7 +27,7 @@ namespace RallySimulator.Application.Contracts.Common
         /// <summary>
         /// Gets the empty paged result for the specified type.
         /// </summary>
-        public static PagedResult<T> Empty => new PagedResult<T>(Array.Empty<T>(), 0, 0, 0);
+        public static PagedList<T> Empty => new PagedList<T>(Array.Empty<T>(), 0, 0, 0);
 
         /// <summary>
         /// Gets the readonly collection of items.

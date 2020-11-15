@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using RallySimulator.Application.Abstractions.Messaging;
 using RallySimulator.Application.Contracts.Common;
 using RallySimulator.Application.Contracts.Vehicles;
@@ -9,7 +11,7 @@ namespace RallySimulator.Application.Core.Vehicles.Queries.GetVehicles
     /// <summary>
     /// Represents the query for getting a collection of vehicles.
     /// </summary>
-    public sealed class GetVehiclesQuery : IQuery<PagedResult<VehicleResponse>>
+    public sealed class GetVehiclesQuery : IQuery<PagedList<VehicleResponse>>
     {
         private const int MaxPageSize = 50;
 
@@ -49,9 +51,9 @@ namespace RallySimulator.Application.Core.Vehicles.Queries.GetVehicles
             FilterStatus = Enum.IsDefined(typeof(VehicleStatus), status);
             DistanceFrom = distanceFrom;
             DistanceTo = distanceTo;
-            OrderBy = orderBy;
             Page = page < 0 ? 1 : page;
             PageSize = pageSize < 0 ? 0 : pageSize > MaxPageSize ? MaxPageSize : pageSize;
+            OrderBy = ValidateOrderBy(orderBy);
         }
 
         /// <summary>
@@ -113,5 +115,51 @@ namespace RallySimulator.Application.Core.Vehicles.Queries.GetVehicles
         /// Gets or sets the order by.
         /// </summary>
         public string OrderBy { get; set; }
+
+        /// <summary>
+        /// Validates the provided order by string.
+        /// </summary>
+        /// <param name="orderBy">The order by string.</param>
+        /// <returns>The validated order by string or a default order by.</returns>
+        private static string ValidateOrderBy(string orderBy)
+        {
+            string defaultOrderBy = $"{nameof(Vehicle.TeamName)}.{nameof(Vehicle.TeamName.Value)}";
+
+            if (string.IsNullOrWhiteSpace(orderBy))
+            {
+                return defaultOrderBy;
+            }
+
+            string[] orderByParts = orderBy.Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+            var orderByStringBuilder = new StringBuilder();
+
+            var validOrderByColumnsDictionary = new Dictionary<string, string>()
+            {
+                { nameof(Vehicle.TeamName).ToLower(), defaultOrderBy },
+                { nameof(Vehicle.ModelName).ToLower(), $"{nameof(Vehicle.ModelName)}.{nameof(Vehicle.ModelName.Value)}" },
+                { nameof(Vehicle.ManufacturingDate).ToLower(), nameof(Vehicle.ManufacturingDate) },
+                { nameof(Vehicle.Status).ToLower(), nameof(Vehicle.Status) },
+                { nameof(Vehicle.Distance).ToLower(), $"{nameof(Vehicle.Distance)}.{nameof(Vehicle.Distance.Value)}" }
+            };
+
+            foreach (string orderByPart in orderByParts)
+            {
+                string columnName = orderByPart.Trim(' ').Split(' ')[0].ToLower();
+
+                if (!validOrderByColumnsDictionary.ContainsKey(columnName))
+                {
+                    continue;
+                }
+
+                string sortDirection = orderByPart.EndsWith(" desc", StringComparison.OrdinalIgnoreCase) ? " desc" : string.Empty;
+
+                orderByStringBuilder.Append($"{validOrderByColumnsDictionary[columnName]}{sortDirection}, ");
+            }
+
+            string validatedOrderBy = orderByStringBuilder.ToString().TrimEnd(',', ' ');
+
+            return string.IsNullOrEmpty(validatedOrderBy) ? defaultOrderBy : validatedOrderBy;
+        }
     }
 }

@@ -50,7 +50,7 @@ namespace RallySimulator.Application.Core.Vehicles.Queries.GetVehicleById
                 TeamName = vehicle.TeamName,
                 ModelName = vehicle.ModelName,
                 ManufacturingDate = vehicle.ManufacturingDate,
-                Distance = $"{vehicle.DistanceCovered.Value} km",
+                Distance = $"{vehicle.Distance.Value} km",
                 Speed = $"{vehicle.Speed.SpeedInKilometersPerHour.Value} km/h",
                 Status = vehicle.Status.ToString(),
                 VehicleType = vehicle.VehicleType.ToString(),

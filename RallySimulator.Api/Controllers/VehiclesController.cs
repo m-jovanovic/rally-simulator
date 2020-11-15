@@ -133,7 +133,7 @@ namespace RallySimulator.Api.Controllers
         /// <param name="orderBy">The order by.</param>
         /// <returns>200 - OK response with the paged result of vehicles for the specified parameters.</returns>
         [HttpGet(ApiRoutes.Vehicles.GetVehicles)]
-        [ProducesResponseType(typeof(PagedResult<VehicleResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedList<VehicleResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetVehicles(
             int raceId,
             string team,

@@ -36,11 +36,11 @@ namespace RallySimulator.Persistence.Configurations
 
             builder.Property(vehicle => vehicle.NumberOfHoursLeftUntilRepaired).IsRequired(false);
 
-            builder.OwnsOne(vehicle => vehicle.DistanceCovered, lengthInKilometersBuilder =>
+            builder.OwnsOne(vehicle => vehicle.Distance, lengthInKilometersBuilder =>
                 lengthInKilometersBuilder
                     .Property(lengthInKilometers => lengthInKilometers.Value)
                     .HasConversion<double>()
-                    .HasColumnName(nameof(Vehicle.DistanceCovered))
+                    .HasColumnName(nameof(Vehicle.Distance))
                     .IsRequired());
 
             builder.Property(vehicle => vehicle.StartTimeUtc).IsRequired(false);
@@ -53,7 +53,7 @@ namespace RallySimulator.Persistence.Configurations
 
             builder.Property(vehicle => vehicle.ModifiedOnUtc).IsRequired(false);
 
-            builder.Navigation(vehicle => vehicle.DistanceCovered).IsRequired();
+            builder.Navigation(vehicle => vehicle.Distance).IsRequired();
 
             builder.Navigation(vehicle => vehicle.TeamName).IsRequired();
 

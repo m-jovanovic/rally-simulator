@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +15,7 @@ namespace RallySimulator.Application.Core.Vehicles.Queries.GetVehicles
     /// <summary>
     /// Represents the <see cref="GetVehiclesQuery"/> handler.
     /// </summary>
-    internal sealed class GetVehiclesQueryHandler : IQueryHandler<GetVehiclesQuery, PagedResult<VehicleResponse>>
+    internal sealed class GetVehiclesQueryHandler : IQueryHandler<GetVehiclesQuery, PagedList<VehicleResponse>>
     {
         private readonly IDbContext _dbContext;
 
@@ -26,38 +26,39 @@ namespace RallySimulator.Application.Core.Vehicles.Queries.GetVehicles
         public GetVehiclesQueryHandler(IDbContext dbContext) => _dbContext = dbContext;
 
         /// <inheritdoc />
-        public async Task<PagedResult<VehicleResponse>> Handle(GetVehiclesQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<VehicleResponse>> Handle(GetVehiclesQuery request, CancellationToken cancellationToken)
         {
             if (request.RaceId <= 0)
             {
-                return PagedResult<VehicleResponse>.Empty;
+                return PagedList<VehicleResponse>.Empty;
             }
 
-            // TODO: Integrate OrderBy
-            IQueryable<VehicleResponse> vehiclesQuery =
-                from vehicle in _dbContext.Set<Vehicle>().Include(x => x.Speed).AsNoTracking()
-                where vehicle.RaceId == request.RaceId &&
-                      (string.IsNullOrEmpty(request.Team) || vehicle.TeamName.Value.ToLower().Contains(request.Team)) &&
-                      (string.IsNullOrEmpty(request.Model) || vehicle.ModelName.Value.ToLower().Contains(request.Model)) &&
-                      (request.ManufacturingDateFrom == null || vehicle.ManufacturingDate >= request.ManufacturingDateFrom) &&
-                      (request.ManufacturingDateTo == null || vehicle.ManufacturingDate <= request.ManufacturingDateTo) &&
-                      (!request.FilterStatus || vehicle.Status == (VehicleStatus)request.Status) &&
-                      (request.DistanceFrom == null || vehicle.DistanceCovered.Value >= request.DistanceFrom) &&
-                      (request.DistanceTo == null || vehicle.DistanceCovered.Value <= request.DistanceTo)
-                orderby vehicle.Id
-                select new VehicleResponse
+            IQueryable<VehicleResponse> vehiclesQuery = _dbContext.Set<Vehicle>()
+                .Include(x => x.Speed)
+                .AsNoTracking()
+                .Where(vehicle =>
+                    vehicle.RaceId == request.RaceId &&
+                    (string.IsNullOrEmpty(request.Team) || vehicle.TeamName.Value.ToLower().Contains(request.Team)) &&
+                    (string.IsNullOrEmpty(request.Model) || vehicle.ModelName.Value.ToLower().Contains(request.Model)) &&
+                    (request.ManufacturingDateFrom == null || vehicle.ManufacturingDate >= request.ManufacturingDateFrom) &&
+                    (request.ManufacturingDateTo == null || vehicle.ManufacturingDate <= request.ManufacturingDateTo) &&
+                    (!request.FilterStatus || vehicle.Status == (VehicleStatus)request.Status) &&
+                    (request.DistanceFrom == null || vehicle.Distance.Value >= request.DistanceFrom) &&
+                    (request.DistanceTo == null || vehicle.Distance.Value <= request.DistanceTo))
+                .OrderBy(request.OrderBy)
+                .Select(vehicle => new VehicleResponse
                 {
                     VehicleId = vehicle.Id,
                     RaceId = vehicle.RaceId,
                     TeamName = vehicle.TeamName,
                     ModelName = vehicle.ModelName,
                     ManufacturingDate = vehicle.ManufacturingDate,
-                    Distance = $"{vehicle.DistanceCovered.Value} km",
+                    Distance = $"{vehicle.Distance.Value} km",
                     Speed = $"{vehicle.Speed.SpeedInKilometersPerHour.Value} km/h",
                     Status = vehicle.Status.ToString(),
                     VehicleType = vehicle.VehicleType.ToString(),
                     VehicleSubtype = vehicle.VehicleSubtype.ToString()
-                };
+                });
 
             List<VehicleResponse> vehicles = await vehiclesQuery
                 .Skip((request.Page - 1) * request.PageSize)
@@ -66,7 +67,7 @@ namespace RallySimulator.Application.Core.Vehicles.Queries.GetVehicles
 
             int totalCount = await vehiclesQuery.CountAsync(cancellationToken);
 
-            var response = new PagedResult<VehicleResponse>(vehicles, totalCount, request.Page, request.PageSize);
+            var response = new PagedList<VehicleResponse>(vehicles, totalCount, request.Page, request.PageSize);
 
             return response;
         }

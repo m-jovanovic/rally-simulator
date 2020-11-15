@@ -39,12 +39,12 @@ namespace RallySimulator.Application.Core.Races.Queries.GetRaceLeaderboard
                     .Where(x => x.RaceId == request.RaceId)
                     .OrderBy(x => x.FinishTimeUtc.HasValue)
                     .ThenBy(x => x.FinishTimeUtc)
-                    .ThenByDescending(x => x.DistanceCovered.Value)
+                    .ThenByDescending(x => x.Distance.Value)
                     .Take(10)
                     .Select(vehicle => new LeaderboardVehicle
                     {
                         VehicleId = vehicle.Id,
-                        Distance = $"{vehicle.DistanceCovered.Value} km",
+                        Distance = $"{vehicle.Distance.Value} km",
                         FinishTime = vehicle.FinishTimeUtc,
                         VehicleSubtype = vehicle.VehicleSubtype.ToString()
                     })

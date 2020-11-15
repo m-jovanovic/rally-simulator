@@ -122,7 +122,7 @@ namespace RallySimulator.BackgroundTasks
 
                 vehicle.IncrementDistance(vehicle.Speed.SpeedInKilometersPerHour * 1.0m, race.LengthInKilometers);
 
-                if (vehicle.DistanceCovered == race.LengthInKilometers)
+                if (vehicle.Distance == race.LengthInKilometers)
                 {
                     vehicle.CompleteRace();
                 }

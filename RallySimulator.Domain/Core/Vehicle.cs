@@ -42,7 +42,7 @@ namespace RallySimulator.Domain.Core
             VehicleType = DetermineVehicleType(vehicleSubtype);
             VehicleSubtype = vehicleSubtype;
             Status = VehicleStatus.Pending;
-            DistanceCovered = LengthInKilometers.Zero;
+            Distance = LengthInKilometers.Zero;
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace RallySimulator.Domain.Core
         /// <summary>
         /// Gets the distance in kilometers the vehicle has covered.
         /// </summary>
-        public LengthInKilometers DistanceCovered { get; private set; }
+        public LengthInKilometers Distance { get; private set; }
 
         /// <summary>
         /// Gets the race start time in UTC format.
@@ -260,11 +260,11 @@ namespace RallySimulator.Domain.Core
         /// <param name="maxDistance">The maximum distance.</param>
         public void IncrementDistance(LengthInKilometers distanceIncrement, LengthInKilometers maxDistance)
         {
-            DistanceCovered = LengthInKilometers.Create(DistanceCovered + distanceIncrement).Value;
+            Distance = LengthInKilometers.Create(Distance + distanceIncrement).Value;
 
-            if (DistanceCovered > maxDistance)
+            if (Distance > maxDistance)
             {
-                DistanceCovered = LengthInKilometers.Create(maxDistance).Value;
+                Distance = LengthInKilometers.Create(maxDistance).Value;
             }
         }
 
