@@ -14,8 +14,8 @@ namespace RallySimulator.Application.Core.Vehicles.Queries.GetVehicles
     public sealed class GetVehiclesQuery : IQuery<PagedList<VehicleResponse>>
     {
         private const int MaxPageSize = 50;
-        private static readonly string DefaultOrderBy = $"{nameof(Vehicle.TeamName)}.{nameof(Vehicle.TeamName.Value)}";
-        private static readonly Dictionary<string, string> ValidOrderByColumnsDictionary = new Dictionary<string, string>()
+        private const string DefaultOrderBy = $"{nameof(Vehicle.TeamName)}.{nameof(Vehicle.TeamName.Value)}";
+        private static readonly Dictionary<string, string> ValidOrderByColumnsDictionary = new()
         {
             { nameof(Vehicle.TeamName).ToLower(), $"{nameof(Vehicle.TeamName)}.{nameof(Vehicle.TeamName.Value)}" },
             { nameof(Vehicle.ModelName).ToLower(), $"{nameof(Vehicle.ModelName)}.{nameof(Vehicle.ModelName.Value)}" },
@@ -151,8 +151,8 @@ namespace RallySimulator.Application.Core.Vehicles.Queries.GetVehicles
                 }
 
                 string sortDirection = orderByPart.EndsWith(" desc", StringComparison.OrdinalIgnoreCase) ? " desc" : string.Empty;
-
-                orderByStringBuilder.Append($"{ValidOrderByColumnsDictionary[columnName]}{sortDirection}, ");
+                string orderByValue = $"{ValidOrderByColumnsDictionary[columnName]}{sortDirection}, ";
+                orderByStringBuilder.Append(orderByValue);
             }
 
             string validatedOrderBy = orderByStringBuilder.ToString().TrimEnd(',', ' ');
