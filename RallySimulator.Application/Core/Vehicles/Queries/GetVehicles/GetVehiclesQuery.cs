@@ -145,13 +145,13 @@ namespace RallySimulator.Application.Core.Vehicles.Queries.GetVehicles
             {
                 string columnName = orderByPart.Trim(' ').Split(' ')[0].ToLower();
 
-                if (!ValidOrderByColumnsDictionary.ContainsKey(columnName))
+                if (!ValidOrderByColumnsDictionary.TryGetValue(columnName, out string value))
                 {
                     continue;
                 }
 
                 string sortDirection = orderByPart.EndsWith(" desc", StringComparison.OrdinalIgnoreCase) ? " desc" : string.Empty;
-                string orderByValue = $"{ValidOrderByColumnsDictionary[columnName]}{sortDirection}, ";
+                string orderByValue = $"{value}{sortDirection}, ";
                 orderByStringBuilder.Append(orderByValue);
             }
 

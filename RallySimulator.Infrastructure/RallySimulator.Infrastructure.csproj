@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFramework>net6.0</TargetFramework>
-	  <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <TargetFramework>net6.0</TargetFramework>
+	<AnalysisMode>AllEnabledByDefault</AnalysisMode>
   </PropertyGroup>
 
   <Import Project="..\CodeAnalysis.targets" />
@@ -14,6 +14,5 @@
   <ItemGroup>
     <ProjectReference Include="..\RallySimulator.Application\RallySimulator.Application.csproj" />
   </ItemGroup>
-
 
 </Project>
