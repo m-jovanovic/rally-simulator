@@ -10,10 +10,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    - name: Setup .NET Core
+    - name: Setup .NET6
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.403
+        dotnet-version: 6
     
     - name: Install dependencies
       run: dotnet restore RallySimulator.sln
