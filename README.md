@@ -4,14 +4,13 @@
 ![Build](https://github.com/thelanmi/rally-simulator/workflows/Build/badge.svg)
 
 
-**Vehicle racing simulator implemented using .NET Core 3.1 and a SQLite in-memory database.**
+**Vehicle racing simulator implemented using .NET6 and a SQLite in-memory database.**
 
 ## Technologies
 
-- .NET Core 3.1
-- ASP.NET Core 3.1
+- .NET6
 - SQLite (In-Memory)
-- Entity Framework Core 5.0
+- Entity Framework Core 6.0
 - Dapper
 - Dynamic LINQ
 - MediatR
