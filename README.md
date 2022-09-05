@@ -10,7 +10,7 @@
 
 - .NET6
 - SQLite (In-Memory)
-- Entity Framework Core 5.0
+- Entity Framework Core 6.0
 - Dapper
 - Dynamic LINQ
 - MediatR
